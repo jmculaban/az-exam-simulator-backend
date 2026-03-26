@@ -55,7 +55,7 @@ jobs:
       - name: Deploy to Azure App Service
         run: |
           az webapp config container set \
-            --name ${{ secrets.APP_SERVICE_NAME }} \
+            --name ${{ secrets.APP_NAME }} \
             --resource-group rg-azexam-simulator-dev \
             --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }}
