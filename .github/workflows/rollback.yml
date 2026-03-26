@@ -1,0 +1,35 @@
+name: Rollback Deployment
+
+env:
+  IMAGE_NAME: azexam-backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to rollback to (e.g., v1, v2, etc.)'
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Rollback to Previous Version
+        run: |
+          az webapp config container set \
+            --name ${{ secrets.APP_NAME }} \
+            --resource-group rg-azexam-simulator-dev \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.version }} \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }}
+
+      - name: Restart App Service
+        run: |
+          az webapp restart \
+            --name ${{ secrets.APP_NAME }} \
+            --resource-group rg-azexam-simulator-dev

@@ -7,6 +7,7 @@ on:
 
 env:
   IMAGE_NAME: azexam-backend
+  VERSION: v${{ github.run_number }}
 
 jobs:
   build-and-deploy:
@@ -44,12 +45,18 @@ jobs:
       # 6. Build Docker Image
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+          docker build \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest \
+            .
 
       # 7. Push Image
       - name: Push Docker Image
         run: |
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest
 
       # 8. Deploy to Azure App Service
       - name: Deploy to Azure App Service
@@ -57,7 +64,7 @@ jobs:
           az webapp config container set \
             --name ${{ secrets.APP_NAME }} \
             --resource-group rg-azexam-simulator-dev \
-            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
             --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }}
       
       # 9. Restart App Service
