@@ -57,12 +57,12 @@ jobs:
           az webapp config container set \
             --name ${{ secrets.APP_NAME }} \
             --resource-group rg-azexam-simulator-dev \
-            --docker-custom-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            --docker-registry-server-url https://${{ secrets.ACR_LOGIN_SERVER }}
+            --container-image-name ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --container-registry-url https://${{ secrets.ACR_LOGIN_SERVER }}
       
       # 9. Restart App Service
       - name: Restart Azure App Service
         run: |
           az webapp restart \
-            --name ${{ secrets.APP_SERVICE_NAME }} \
+            --name ${{ secrets.APP_NAME }} \
             --resource-group rg-azexam-simulator-dev
