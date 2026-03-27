@@ -1,5 +1,6 @@
 package com.azexam.simulator.model;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -24,8 +25,8 @@ public class ExamSession {
   private String status;
   private Integer durationMinutes;
 
-  private LocalDateTime startTime;
-  private LocalDateTime endTime;
+  private Instant startTime;
+  private Instant endTime;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

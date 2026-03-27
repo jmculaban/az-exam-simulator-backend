@@ -1,5 +1,7 @@
 package com.azexam.simulator.service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,6 +14,7 @@ import com.azexam.simulator.dto.ExamResultResponse;
 import com.azexam.simulator.exception.BadRequestException;
 import com.azexam.simulator.model.ExamAnswer;
 import com.azexam.simulator.model.ExamResult;
+import com.azexam.simulator.model.ExamSessionStatus;
 import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.azexam.simulator.repository.ExamResultRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,6 +51,11 @@ public class ExamResultService {
     }
 
     var session = sessionService.getSession(sessionId);
+    
+    if (ExamSessionStatus.SUBMITTED.name().equals(session.getStatus())) {
+      throw new BadRequestException("Exam already submitted");
+    }
+    
     var questions = questionLoader.loadExam(session.getExamCode()).getQuestions();
 
     var answers = answerRepository.findBySessionId(sessionId);
@@ -83,7 +91,11 @@ public class ExamResultService {
     result.setTotal(total);
     result.setPassed(score >= 70);
 
+    result.setSubmittedAt(Instant.now());
+
     resultRepository.save(result);
+
+    sessionService.markAsSubmitted(session);
 
     return new ExamResultResponse(score, correct, total, score >= 70);
   }

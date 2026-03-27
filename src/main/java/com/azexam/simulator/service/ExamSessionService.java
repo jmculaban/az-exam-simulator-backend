@@ -1,5 +1,6 @@
 package com.azexam.simulator.service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class ExamSessionService {
     session.setId(UUID.randomUUID());
     session.setExamCode(examCode);
     session.setUser(user);
-    session.setStartTime(LocalDateTime.now());
+    session.setStartTime(Instant.now());
     session.setStatus("IN_PROGRESS");
 
     return sessionRepository.save(session);
@@ -47,5 +48,11 @@ public class ExamSessionService {
 
   public List<ExamSession> getSessionByUserId(UUID userId) {
     return sessionRepository.findByUser_Id(userId);
+  }
+
+  public void markAsSubmitted(ExamSession session) {
+    session.setStatus("SUBMITTED");
+    session.setEndTime(Instant.now());
+    sessionRepository.save(session);
   }
 }
