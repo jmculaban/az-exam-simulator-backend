@@ -66,6 +66,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+	<dependency>
+	  <groupId>com.azure</groupId>
+	  <artifactId>azure-storage-blob</artifactId>
+	  <version>12.25.0</version>
+	</dependency>
 	</dependencies>
 
 	<build>

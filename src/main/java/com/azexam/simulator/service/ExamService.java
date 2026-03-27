@@ -3,7 +3,9 @@ package com.azexam.simulator.service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import com.azexam.simulator.model.ExamAnswer;
 import com.azexam.simulator.model.ExamResult;
 import com.azexam.simulator.model.ExamSession;
 import com.azexam.simulator.model.User;
+import com.azexam.simulator.model.yaml.ExamYaml;
+import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.azexam.simulator.repository.ExamResultRepository;
 import com.azexam.simulator.repository.ExamSessionRepository;
@@ -27,17 +31,20 @@ public class ExamService {
   private final UserRepository userRepository;
   private final ExamAnswerRepository answerRepository;
   private final ExamResultRepository resultRepository;
+  private final QuestionLoaderService questionLoaderService;
 
   public ExamService(
     ExamSessionRepository sessionRepository,
     UserRepository userRepository,
     ExamAnswerRepository answerRepository,
-    ExamResultRepository resultRepository
+    ExamResultRepository resultRepository,
+    QuestionLoaderService questionLoaderService
   ) {
     this.sessionRepository = sessionRepository;
     this.userRepository = userRepository;
     this.answerRepository = answerRepository;
     this.resultRepository = resultRepository;
+    this.questionLoaderService = questionLoaderService;
   }
 
   public ExamSession createSession(String examCode, UUID userId) {
@@ -84,9 +91,29 @@ public class ExamService {
       answerRepository.save(answer);
     }
 
-    // 2. TEMP SCORING (replace later with YAML)
-    int total = answers.size();
-    int correct = total;
+    // 2. TEMP SCORING (replace later with YAML)    
+    ExamYaml examYaml = questionLoaderService.loadExam(session.getExamCode());
+
+    Map<String, String> correctAnswers = examYaml.getQuestions()
+      .stream()
+      .collect(Collectors.toMap(
+        QuestionYaml::getId,
+        QuestionYaml::getCorrectAnswer
+      ));
+
+    int correct = 0;
+
+    for (AnswerDto dto : answers) {
+      
+      String correctAnswer = correctAnswers.get(dto.getQuestionId());
+      
+      if (correctAnswer != null && 
+          correctAnswer.equals(dto.getAnswer())) {
+        correct++;
+      }
+    }
+
+    int total = answers.size();    
     int score = total == 0 ? 0 : (correct * 100 / total);
 
     // 3. Save result

@@ -73,3 +73,20 @@ jobs:
           az webapp restart \
             --name ${{ secrets.APP_NAME }} \
             --resource-group rg-azexam-simulator-dev
+
+      # 10. Upload YAML to Blob
+      - name: Upload YAML to Blob
+        run: |
+          echo "Uploading question bank YAML to Azure Blob Storage..."
+
+          for file in question-bank/*.yml; do
+            echo "Uploading $file..."
+
+            az storage blob upload \
+              --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} \
+              --container-name question-bank \
+              --name $(basename $file) \
+              --file $file \
+              --auth-mode login \
+              --overwrite
+          done
