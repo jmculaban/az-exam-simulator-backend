@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,11 +20,14 @@ public class ExamSession {
   @Id
   private UUID id;
 
-  private UUID userId;
   private String examCode;
   private String status;
   private Integer durationMinutes;
 
   private LocalDateTime startTime;
   private LocalDateTime endTime;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 }
