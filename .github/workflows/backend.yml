@@ -87,6 +87,6 @@ jobs:
               --container-name question-bank \
               --name $(basename $file) \
               --file $file \
-              --auth-mode login \
+              --sas-token "${{ secrets.AZURE_STORAGE_SAS_TOKEN }}" \
               --overwrite
           done
