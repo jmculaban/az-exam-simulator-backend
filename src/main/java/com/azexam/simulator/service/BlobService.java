@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 
@@ -16,15 +17,35 @@ public class BlobService {
   private final BlobContainerClient blobContainerClient;
 
   public BlobService(
-    @Value(".storage.connection-string}") String connectionString,
+    @Value("${azure.storage.connection-string:}") String connectionString,
+    @Value("${azure.storage.blob-endpoint:}") String blobEndpoint,
+    @Value("${azure.storage.sas-token:}") String sasToken,
     @Value("${azure.storage.container-name}") String containerName
   ) {
-    BlobServiceClient serviceClient = 
-      new BlobServiceClientBuilder()
-        .connectionString(connectionString)
-        .buildClient();
-    
+    if (connectionString != null && !connectionString.isBlank()) {
+      BlobServiceClient serviceClient =
+        new BlobServiceClientBuilder()
+          .connectionString(connectionString)
+          .buildClient();
       this.blobContainerClient = serviceClient.getBlobContainerClient(containerName);
+      return;
+    }
+
+    if (blobEndpoint != null && !blobEndpoint.isBlank() && sasToken != null && !sasToken.isBlank()) {
+      String normalizedSasToken = sasToken.startsWith("?") ? sasToken.substring(1) : sasToken;
+      this.blobContainerClient =
+        new BlobContainerClientBuilder()
+          .endpoint(blobEndpoint)
+          .sasToken(normalizedSasToken)
+          .containerName(containerName)
+          .buildClient();
+      return;
+    }
+
+    throw new IllegalStateException(
+      "Azure Blob Storage configuration is missing. Set azure.storage.connection-string " +
+      "or both azure.storage.blob-endpoint and azure.storage.sas-token."
+    );
   }
 
   public String downloadFile(String filename) {

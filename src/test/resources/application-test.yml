@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false
+
+azure:
+  storage:
+    connection-string: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IAbKdKfMuKtGxDXMOTMvqRS0HCnm9+E3Av8fJMzS8===;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;"
+    container-name: question-bank
