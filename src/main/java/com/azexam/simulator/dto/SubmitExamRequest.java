@@ -8,5 +8,4 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SubmitExamRequest {
-  private List<AnswerDto> answers;
 }

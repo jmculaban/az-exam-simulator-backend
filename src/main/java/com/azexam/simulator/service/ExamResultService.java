@@ -1,15 +1,20 @@
 package com.azexam.simulator.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.dto.AnswerDto;
 import com.azexam.simulator.dto.ExamResultResponse;
 import com.azexam.simulator.exception.BadRequestException;
+import com.azexam.simulator.model.ExamAnswer;
 import com.azexam.simulator.model.ExamResult;
+import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.azexam.simulator.repository.ExamResultRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ExamResultService {
@@ -17,21 +22,27 @@ public class ExamResultService {
   private final ExamSessionService sessionService;
   private final ExamResultRepository resultRepository;
   private final QuestionLoaderService questionLoader;
+  private final ObjectMapper objectMapper;
+  private final ExamAnswerRepository answerRepository;
 
   public ExamResultService(
     ExamSessionService sessionService,
     ExamResultRepository resultRepository,
-    QuestionLoaderService questionLoader
+    QuestionLoaderService questionLoader,
+    ObjectMapper objectMapper,
+    ExamAnswerRepository answerRepository
   ) {
     this.sessionService = sessionService;
     this.resultRepository = resultRepository;
     this.questionLoader = questionLoader;
+    this.objectMapper = objectMapper;
+    this.answerRepository = answerRepository;
   }
 
-  public ExamResultResponse submitExam(UUID sessionId, List<AnswerDto> answers) {
+  public ExamResultResponse submitExam(UUID sessionId) {
     
     var existing = resultRepository.findBySessionId(sessionId);
-    
+
     if (existing.isPresent()) {
       throw new BadRequestException("Exam already submitted");
     }
@@ -39,16 +50,25 @@ public class ExamResultService {
     var session = sessionService.getSession(sessionId);
     var questions = questionLoader.loadExam(session.getExamCode()).getQuestions();
 
+    var answers = answerRepository.findBySessionId(sessionId);
+    
+    Map<String, String> answerMap = answers.stream()
+      .collect(Collectors.toMap(
+        ExamAnswer::getQuestionId,
+        ExamAnswer::getAnswer
+      ));
+
     int correct = 0;
 
     for (var q: questions) {
-      var userAnswer = answers.stream()
-        .filter(a -> a.getQuestionId().equals(q.getId()))
-        .findFirst();
+      
+      if (answerMap.containsKey(q.getId())) {
 
-      if (userAnswer.isPresent() &&
-          userAnswer.get().getAnswer().equals(q.getCorrectAnswer())) {
-            correct++;
+        String parsedAnswer = extractAnswer(answerMap.get(q.getId()));
+
+        if (parsedAnswer.equals(q.getCorrectAnswer())) {
+          correct++;
+        }
       }
     }
 
@@ -79,5 +99,13 @@ public class ExamResultService {
       result.getTotal(),
       result.getPassed()
     );
+  }
+
+  private String extractAnswer(String json) {
+    try {
+      return objectMapper.readValue(json, String.class);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to deserialize answer from JSON", e);
+    }
   }
 }

@@ -29,7 +29,7 @@ public class ExamAnswer {
   private String questionId;
 
   @JdbcTypeCode(SqlTypes.JSON)
-  @Column(columnDefinition = "jsonb")
+  @Column(name = "answer", columnDefinition = "jsonb")
   private String answer;
 
   @Column(name = "created_at")
