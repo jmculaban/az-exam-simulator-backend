@@ -17,20 +17,10 @@ public class BlobService {
   private final BlobContainerClient blobContainerClient;
 
   public BlobService(
-    @Value("${azure.storage.connection-string:}") String connectionString,
     @Value("${azure.storage.blob-endpoint:}") String blobEndpoint,
     @Value("${azure.storage.sas-token:}") String sasToken,
     @Value("${azure.storage.container-name}") String containerName
   ) {
-    if (connectionString != null && !connectionString.isBlank()) {
-      BlobServiceClient serviceClient =
-        new BlobServiceClientBuilder()
-          .connectionString(connectionString)
-          .buildClient();
-      this.blobContainerClient = serviceClient.getBlobContainerClient(containerName);
-      return;
-    }
-
     if (blobEndpoint != null && !blobEndpoint.isBlank() && sasToken != null && !sasToken.isBlank()) {
       String normalizedSasToken = sasToken.startsWith("?") ? sasToken.substring(1) : sasToken;
       this.blobContainerClient =

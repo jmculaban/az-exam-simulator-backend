@@ -42,5 +42,4 @@ public class ExamController {
         examResultService.getResult(sessionId)
       );
   }
-  
 }
