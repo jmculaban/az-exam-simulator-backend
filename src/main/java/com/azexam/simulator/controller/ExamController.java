@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.azexam.simulator.dto.ExamResultResponse;
+import com.azexam.simulator.dto.ResumeExamResponse;
+import com.azexam.simulator.service.ExamQueryService;
 import com.azexam.simulator.service.ExamResultService;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -17,9 +19,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ExamController {
   
   private final ExamResultService examResultService;
+  private final ExamQueryService examQueryService;
 
-  public ExamController(ExamResultService examResultService) {
+  public ExamController(
+      ExamResultService examResultService,
+      ExamQueryService examQueryService) {
     this.examResultService = examResultService;
+    this.examQueryService = examQueryService;
   }
 
   @PostMapping("/{sessionId}/submit")
@@ -32,9 +38,20 @@ public class ExamController {
   }
 
   @GetMapping("/{sessionId}/result")
-  public ResponseEntity<ExamResultResponse> getResult(@PathVariable UUID sessionId) {
+  public ResponseEntity<ExamResultResponse> getResult(
+        @PathVariable UUID sessionId) {
+      
       return ResponseEntity.ok(
         examResultService.getResult(sessionId)
       );
+  }
+
+  @GetMapping("/{sessionId}/resume")
+  public ResponseEntity<ResumeExamResponse> resumeExam(
+        @PathVariable UUID sessionId) {
+    
+    return ResponseEntity.ok(
+      examQueryService.resumeExam(sessionId)
+    );
   }
 }
