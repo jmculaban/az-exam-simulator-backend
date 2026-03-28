@@ -1,17 +1,128 @@
-examCode: AZ-900
-durationMinutes: 1
+examCode: az-900
+title: Microsoft Azure Fundamentals (AZ-900)
+durationMinutes: 60
+
 questions:
+
   - id: q1
-    text: What is Azure?
+    type: SINGLE_CHOICE
+    question: What is Azure?
     options:
-      - A cloud platform
-      - A database
-      - A browser
-    correctAnswer: A cloud platform
+      - A platform for building mobile apps only
+      - A cloud computing platform by Microsoft
+      - A programming language
+      - A database system
+    correctAnswer: A cloud computing platform by Microsoft
 
   - id: q2
-    text: What is IaaS?
+    type: MULTIPLE_CHOICE
+    question: Which of the following are Azure compute services?
     options:
-      - Infrastructure as a Service
-      - Internet as a Service
-    correctAnswer: Infrastructure as a Service
+      - Virtual Machines
+      - Azure Functions
+      - Azure Blob Storage
+      - App Service
+    correctAnswers:
+      - Virtual Machines
+      - Azure Functions
+      - App Service
+
+  - id: q3
+    type: ORDERING
+    question: Arrange the steps to deploy a virtual machine in Azure.
+    options:
+      - Choose VM Image
+      - Configure Networking
+      - Review + Create
+      - Select Subscription
+    correctOrder:
+      - Select Subscription
+      - Choose VM Image
+      - Configure Networking
+      - Review + Create
+
+  - id: q4
+    type: MATCHING
+    question: Match the Azure service to its category.
+    options:
+      vm: Virtual Machine
+      blob: Blob Storage
+      vnet: Virtual Network
+      sql: Azure SQL Database
+    correctMap:
+      vm: compute
+      blob: storage
+      vnet: networking
+      sql: database
+
+  - id: q5
+    type: SINGLE_CHOICE
+    question: What does Azure Blob Storage store?
+    options:
+      - Structured relational data
+      - Unstructured data like images and videos
+      - Virtual machines
+      - Source code repositories
+    correctAnswer: Unstructured data like images and videos
+
+  - id: q6
+    type: MULTIPLE_CHOICE
+    question: Which of the following are benefits of cloud computing?
+    options:
+      - High availability
+      - Scalability
+      - Manual hardware maintenance
+      - Pay-as-you-go pricing
+    correctAnswers:
+      - High availability
+      - Scalability
+      - Pay-as-you-go pricing
+
+  - id: q7
+    type: MATCHING
+    question: Match the cloud model to its description.
+    options:
+      iaas: Infrastructure as a Service
+      paas: Platform as a Service
+      saas: Software as a Service
+    correctMap:
+      iaas: user manages OS and apps
+      paas: user manages apps only
+      saas: provider manages everything
+
+  - id: q8
+    type: ORDERING
+    question: Arrange the Azure regions selection process.
+    options:
+      - Check compliance requirements
+      - Select closest region
+      - Evaluate service availability
+      - Estimate cost
+    correctOrder:
+      - Check compliance requirements
+      - Evaluate service availability
+      - Select closest region
+      - Estimate cost
+
+  - id: q9
+    type: SINGLE_CHOICE
+    question: What is Azure Virtual Network (VNet)?
+    options:
+      - A storage service
+      - A private network in Azure
+      - A database engine
+      - A monitoring tool
+    correctAnswer: A private network in Azure
+
+  - id: q10
+    type: MULTIPLE_CHOICE
+    question: Which Azure services are used for monitoring?
+    options:
+      - Azure Monitor
+      - Log Analytics
+      - Azure Advisor
+      - Azure DNS
+    correctAnswers:
+      - Azure Monitor
+      - Log Analytics
+      - Azure Advisor

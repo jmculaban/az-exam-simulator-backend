@@ -15,6 +15,7 @@ import com.azexam.simulator.model.ExamResult;
 import com.azexam.simulator.model.ExamSessionStatus;
 import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.azexam.simulator.repository.ExamResultRepository;
+import com.azexam.simulator.service.scoring.ScoringEngine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -25,19 +26,22 @@ public class ExamResultService {
   private final QuestionLoaderService questionLoader;
   private final ObjectMapper objectMapper;
   private final ExamAnswerRepository answerRepository;
+  private final ScoringEngine scoringEngine;
 
   public ExamResultService(
     ExamSessionService sessionService,
     ExamResultRepository resultRepository,
     QuestionLoaderService questionLoader,
     ObjectMapper objectMapper,
-    ExamAnswerRepository answerRepository
+    ExamAnswerRepository answerRepository,
+    ScoringEngine scoringEngine
   ) {
     this.sessionService = sessionService;
     this.resultRepository = resultRepository;
     this.questionLoader = questionLoader;
     this.objectMapper = objectMapper;
     this.answerRepository = answerRepository;
+    this.scoringEngine = scoringEngine;
   }
 
   public ExamResultResponse submitExam(UUID sessionId, boolean isAutoSubmit) {
@@ -81,9 +85,7 @@ public class ExamResultService {
       
       if (answerMap.containsKey(q.getId())) {
 
-        String parsedAnswer = extractAnswer(answerMap.get(q.getId()));
-
-        if (parsedAnswer.equals(q.getCorrectAnswer())) {
+        if (scoringEngine.isCorrect(q, answerMap.get(q.getId()))) {
           correct++;
         }
       }
