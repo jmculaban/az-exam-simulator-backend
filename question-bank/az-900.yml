@@ -1,5 +1,5 @@
 examCode: AZ-900
-durationMinutes: 60
+durationMinutes: 1
 questions:
   - id: q1
     text: What is Azure?

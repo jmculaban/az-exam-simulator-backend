@@ -1,5 +1,6 @@
 package com.azexam.simulator.service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -51,6 +52,17 @@ public class ExamResultService {
     
     if (ExamSessionStatus.SUBMITTED.name().equals(session.getStatus())) {
       throw new BadRequestException("Exam already submitted");
+    }
+
+    // Check timer
+    var startTime = session.getStartTime();
+    var duration = session.getDurationMinutes();
+
+    var endTime = startTime.plus(Duration.ofMinutes(duration));
+    var now = Instant.now();
+
+    if (now.isAfter(endTime)) {
+      throw new BadRequestException("Exam time expired");
     }
     
     var questions = questionLoader.loadExam(session.getExamCode()).getQuestions();
