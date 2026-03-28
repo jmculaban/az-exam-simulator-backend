@@ -60,6 +60,10 @@ public class ExamAnswerService {
       answer.setUpdatedBy("system");
     }
 
+    if (request.getSessionId() == null || request.getQuestionId() == null) {
+      throw new BadRequestException("Session ID and Question ID are required");
+    }
+
     examAnswerRepository.save(answer);
   }
 

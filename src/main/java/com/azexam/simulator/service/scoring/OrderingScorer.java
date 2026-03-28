@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class OrderingScorer {
+public class OrderingScorer implements QuestionScorer {
   
   private final ObjectMapper objectMapper;
 
@@ -17,17 +17,36 @@ public class OrderingScorer {
     this.objectMapper = objectMapper;
   }
 
+  @Override
   public Boolean supports(String type) {
     return "ORDERING".equals(type);
   }
 
+  @Override
   public Boolean isCorrect(QuestionYaml question, String json) {
     try {
-      List<String> user = objectMapper.readValue(
+      List<String> userOrder = objectMapper.readValue(
         json, 
         new TypeReference<List<String>>() {}
       );
-      return user.equals(question.getCorrectAnswers());
+
+      List<String> correctOrder = question.getCorrectOrder();
+
+      if (userOrder.size() != correctOrder.size()) {
+        return false;
+      }
+
+      for (int i = 0; i < userOrder.size(); i++) {
+        String userItem = ScoringUtils.normalize(userOrder.get(i));
+        String correctItem = ScoringUtils.normalize(correctOrder.get(i));
+
+        if (!userItem.equals(correctItem)) {
+          return false;
+        }
+      }
+
+      return true;
+      
     } catch (Exception e) {
       throw new RuntimeException("Failed to parse user answer JSON: " + json, e);
     }

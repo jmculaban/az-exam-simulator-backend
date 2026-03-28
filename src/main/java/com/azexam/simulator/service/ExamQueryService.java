@@ -53,7 +53,7 @@ public class ExamQueryService {
     var answerList = examAnswerRepository.findBySessionId(sessionId);
 
     // 4. Convert answer list to a map for easy lookup
-    Map<String, String> answerMap = answerList.stream()
+    Map<String, Object> answerMap = answerList.stream()
       .collect(Collectors.toMap(
         a -> a.getQuestionId(),
         a -> extractAnswer(a.getAnswer())
@@ -130,9 +130,9 @@ public class ExamQueryService {
     );
   }
 
-  private String extractAnswer(String json) {
+  private Object extractAnswer(String json) {
     try {
-      return objectMapper.readValue(json, String.class);
+      return objectMapper.readValue(json, Object.class);
     } catch (Exception e) {
       throw new RuntimeException("Failed to parse answer JSON", e);
     }

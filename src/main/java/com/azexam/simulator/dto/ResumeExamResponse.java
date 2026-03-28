@@ -14,13 +14,13 @@ public class ResumeExamResponse {
   private UUID sessionId;
   private String status;
   private List<?> questions;
-  private Map<String, String> answers;
+  private Map<String, Object> answers;
 
   public ResumeExamResponse(
       UUID sessionId, 
       String status, 
       List<?> questions, 
-      Map<String, String> answers) {
+      Map<String, Object> answers) {
     this.sessionId = sessionId;
     this.status = status;
     this.questions = questions;

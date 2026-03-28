@@ -11,5 +11,5 @@ public class SaveAnswerRequest {
   
   private UUID sessionId;
   private String questionId;
-  private String answer;
+  private Object answer;
 }
