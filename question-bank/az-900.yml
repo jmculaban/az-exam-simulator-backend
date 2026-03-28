@@ -44,7 +44,7 @@ questions:
   - id: q4
     type: MATCHING
     text: Match the Azure service to its category.
-    options:
+    optionMap:
       vm: Virtual Machine
       blob: Blob Storage
       vnet: Virtual Network
@@ -81,7 +81,7 @@ questions:
   - id: q7
     type: MATCHING
     text: Match the cloud model to its description.
-    options:
+    optionMap:
       iaas: Infrastructure as a Service
       paas: Platform as a Service
       saas: Software as a Service

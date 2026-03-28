@@ -12,7 +12,10 @@ public class QuestionYaml {
   private String id;
   private String text;
   private String type;
+  
+  // OPTIONS
   private List<String> options;
+  private Map<String, String> optionMap;
 
   // SINGLE_CHOICE
   private String correctAnswer;
