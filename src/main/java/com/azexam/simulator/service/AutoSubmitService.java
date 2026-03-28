@@ -26,9 +26,14 @@ public class AutoSubmitService {
   @Scheduled(fixedRate = 30000)
   public void autoSubmitExpiredExams() {
 
+    System.out.println("Running auto-submit task at " + Instant.now());
     var sessions = examSessionRepository.findActiveSessions();
 
+    System.out.println("Found " + sessions.size() + " active sessions to check");
+
     for (var session : sessions) {
+
+      System.out.println("Checking session " + session.getId() + " started at " + session.getStartTime());
 
       if (!"IN_PROGRESS".equals(session.getStatus())) {
         continue;
@@ -38,6 +43,7 @@ public class AutoSubmitService {
       var duration = session.getDurationMinutes();
 
       if (startTime == null || duration == null) {
+        System.out.println("Skipping session " + session.getId() + " due to missing start time or duration");
         continue;
       }
 
@@ -45,9 +51,12 @@ public class AutoSubmitService {
 
       if (Instant.now().isAfter(endTime)) {
         try {
-          examResultService.submitExam(session.getId());
+          System.out.println("Auto-submitting: " + session.getId());
+          examResultService.submitExam(session.getId(), true);
         } catch (Exception e) {
           // Handle exception
+          System.out.println("Error auto-submitting session " + session.getId() + ": " + e.getMessage());
+          e.printStackTrace();
         }
       }
     }

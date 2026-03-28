@@ -40,7 +40,7 @@ public class ExamResultService {
     this.answerRepository = answerRepository;
   }
 
-  public ExamResultResponse submitExam(UUID sessionId) {
+  public ExamResultResponse submitExam(UUID sessionId, boolean isAutoSubmit) {
     
     var existing = resultRepository.findBySessionId(sessionId);
 
@@ -61,7 +61,7 @@ public class ExamResultService {
     var endTime = startTime.plus(Duration.ofMinutes(duration));
     var now = Instant.now();
 
-    if (now.isAfter(endTime)) {
+    if (!isAutoSubmit && now.isAfter(endTime)) {
       throw new BadRequestException("Exam time expired");
     }
     
@@ -90,6 +90,11 @@ public class ExamResultService {
     }
 
     int total = questions.size();
+
+    if (total == 0) {
+      throw new BadRequestException("Exam has no questions");
+    }
+
     int score = (correct * 100) / total;
 
     ExamResult result = new ExamResult();
@@ -107,6 +112,11 @@ public class ExamResultService {
     sessionService.markAsSubmitted(session);
 
     return new ExamResultResponse(score, correct, total, score >= 70);
+  }
+
+  public ExamResultResponse submitExam(UUID sessionId) {
+    // user-triggered
+    return submitExam(sessionId, false);
   }
 
   public ExamResultResponse getResult(UUID sessionId) {
