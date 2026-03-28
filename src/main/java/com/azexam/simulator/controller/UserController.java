@@ -1,0 +1,44 @@
+package com.azexam.simulator.controller;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.azexam.simulator.dto.UserExamHistoryResponse;
+import com.azexam.simulator.service.ExamQueryService;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+  
+  private final ExamQueryService examQueryService;
+
+  public UserController(ExamQueryService examQueryService) {
+    this.examQueryService = examQueryService;
+  }
+
+  @GetMapping("/{userId}/exam-history")
+  public ResponseEntity<?> getExamHistory(
+      @PathVariable UUID userId,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(required = false) Boolean passed,
+      @RequestParam(required = false) String examCode) {
+    
+    var result = examQueryService.getUserExamHistory(
+      userId, 
+      passed, 
+      examCode, 
+      page, 
+      size
+    );
+
+    return ResponseEntity.ok(result);
+  }
+}

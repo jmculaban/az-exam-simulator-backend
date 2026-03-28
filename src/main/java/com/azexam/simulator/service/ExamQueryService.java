@@ -6,12 +6,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.dto.ExamTimerResponse;
 import com.azexam.simulator.dto.ResumeExamResponse;
+import com.azexam.simulator.dto.UserExamHistoryResponse;
 import com.azexam.simulator.repository.ExamAnswerRepository;
+import com.azexam.simulator.repository.ExamSessionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -20,16 +24,19 @@ public class ExamQueryService {
   private final ExamSessionService examSessionService;
   private final QuestionLoaderService questionLoaderService;
   private final ExamAnswerRepository examAnswerRepository;
+  private final ExamSessionRepository examSessionRepository;
   private final ObjectMapper objectMapper;
 
   public ExamQueryService(
       ExamSessionService examSessionService,
       QuestionLoaderService questionLoaderService,
       ExamAnswerRepository examAnswerRepository,
+      ExamSessionRepository examSessionRepository,
       ObjectMapper objectMapper) {
     this.examSessionService = examSessionService;
     this.questionLoaderService = questionLoaderService;
     this.examAnswerRepository = examAnswerRepository;
+    this.examSessionRepository = examSessionRepository;
     this.objectMapper = objectMapper;
   }
 
@@ -104,6 +111,23 @@ public class ExamQueryService {
     }
 
     return new ExamTimerResponse(remainingSeconds, false);
+  }
+
+  public Page<UserExamHistoryResponse> getUserExamHistory(
+      UUID userId,
+      Boolean passed,
+      String examCode,
+      int page,
+      int size) {
+    
+    var pageable = PageRequest.of(page, size);
+
+    return examSessionRepository.findUserExamHistory(
+      userId,
+      passed,
+      examCode,
+      pageable
+    );
   }
 
   private String extractAnswer(String json) {
