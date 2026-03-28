@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ExamYaml {
   private String examCode;
   private List<QuestionYaml> questions;
+  private Integer durationMinutes;
 }

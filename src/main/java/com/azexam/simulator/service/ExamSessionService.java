@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.model.ExamSession;
 import com.azexam.simulator.model.User;
 import com.azexam.simulator.repository.ExamSessionRepository;
@@ -17,13 +16,16 @@ public class ExamSessionService {
   
   private final ExamSessionRepository sessionRepository;
   private final UserRepository userRepository;
+  private final QuestionLoaderService questionLoader;
   
   public ExamSessionService(
     ExamSessionRepository sessionRepository,
-    UserRepository userRepository
+    UserRepository userRepository,
+    QuestionLoaderService questionLoader
   ) {
     this.sessionRepository = sessionRepository;
     this.userRepository = userRepository;
+    this.questionLoader = questionLoader;
   }
 
   public ExamSession createSession(String examCode, UUID userId) {
@@ -31,12 +33,17 @@ public class ExamSessionService {
     User user = userRepository.findById(userId)
       .orElseThrow(() -> new RuntimeException("User not found"));
     
+    var exam = questionLoader.loadExam(examCode);
+    
     ExamSession session = new ExamSession();
     session.setId(UUID.randomUUID());
     session.setExamCode(examCode);
     session.setUser(user);
     session.setStartTime(Instant.now());
     session.setStatus("IN_PROGRESS");
+
+    // Set the duration for the exam session
+    session.setDurationMinutes(exam.getDurationMinutes());
 
     return sessionRepository.save(session);
   }

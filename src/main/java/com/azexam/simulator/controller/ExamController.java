@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.dto.ExamResultResponse;
+import com.azexam.simulator.dto.ExamTimerResponse;
 import com.azexam.simulator.dto.ResumeExamResponse;
 import com.azexam.simulator.service.ExamQueryService;
 import com.azexam.simulator.service.ExamResultService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -62,6 +64,15 @@ public class ExamController {
     
     return ResponseEntity.ok(
       examQueryService.getProgress(sessionId)
+    );
+  }
+
+  @GetMapping("/{sessionId}/timer")
+  public ResponseEntity<ExamTimerResponse> getTimer(
+        @PathVariable UUID sessionId) {
+    
+    return ResponseEntity.ok(
+      examQueryService.getTimer(sessionId)
     );
   }
 }

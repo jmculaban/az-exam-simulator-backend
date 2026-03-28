@@ -1,5 +1,7 @@
 package com.azexam.simulator.service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -7,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.dto.ExamProgressResponse;
+import com.azexam.simulator.dto.ExamTimerResponse;
 import com.azexam.simulator.dto.ResumeExamResponse;
 import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -76,6 +79,31 @@ public class ExamQueryService {
 
     // 4. Return response
     return new ExamProgressResponse(answered, total);
+  }
+
+  public ExamTimerResponse getTimer(UUID sessionId) {
+    
+    var session = examSessionService.getSession(sessionId);
+
+    // If already submitted, no time left
+    if ("SUBMITTED".equals(session.getStatus())) {
+      return new ExamTimerResponse(0, true);
+    }
+
+    var startTime = session.getStartTime();
+    var duration = session.getDurationMinutes();
+
+    var endTime = startTime.plus(Duration.ofMinutes(duration));
+
+    var now = Instant.now();
+
+    long remainingSeconds = Duration.between(now, endTime).getSeconds();
+
+    if (remainingSeconds <= 0) {
+      return new ExamTimerResponse(0, true);
+    }
+
+    return new ExamTimerResponse(remainingSeconds, false);
   }
 
   private String extractAnswer(String json) {
