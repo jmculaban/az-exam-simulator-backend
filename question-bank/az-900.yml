@@ -6,7 +6,7 @@ questions:
 
   - id: q1
     type: SINGLE_CHOICE
-    question: What is Azure?
+    text: What is Azure?
     options:
       - A platform for building mobile apps only
       - A cloud computing platform by Microsoft
@@ -16,7 +16,7 @@ questions:
 
   - id: q2
     type: MULTIPLE_CHOICE
-    question: Which of the following are Azure compute services?
+    text: Which of the following are Azure compute services?
     options:
       - Virtual Machines
       - Azure Functions
@@ -29,7 +29,7 @@ questions:
 
   - id: q3
     type: ORDERING
-    question: Arrange the steps to deploy a virtual machine in Azure.
+    text: Arrange the steps to deploy a virtual machine in Azure.
     options:
       - Choose VM Image
       - Configure Networking
@@ -43,7 +43,7 @@ questions:
 
   - id: q4
     type: MATCHING
-    question: Match the Azure service to its category.
+    text: Match the Azure service to its category.
     options:
       vm: Virtual Machine
       blob: Blob Storage
@@ -57,7 +57,7 @@ questions:
 
   - id: q5
     type: SINGLE_CHOICE
-    question: What does Azure Blob Storage store?
+    text: What does Azure Blob Storage store?
     options:
       - Structured relational data
       - Unstructured data like images and videos
@@ -67,7 +67,7 @@ questions:
 
   - id: q6
     type: MULTIPLE_CHOICE
-    question: Which of the following are benefits of cloud computing?
+    text: Which of the following are benefits of cloud computing?
     options:
       - High availability
       - Scalability
@@ -80,7 +80,7 @@ questions:
 
   - id: q7
     type: MATCHING
-    question: Match the cloud model to its description.
+    text: Match the cloud model to its description.
     options:
       iaas: Infrastructure as a Service
       paas: Platform as a Service
@@ -92,7 +92,7 @@ questions:
 
   - id: q8
     type: ORDERING
-    question: Arrange the Azure regions selection process.
+    text: Arrange the Azure regions selection process.
     options:
       - Check compliance requirements
       - Select closest region
@@ -106,7 +106,7 @@ questions:
 
   - id: q9
     type: SINGLE_CHOICE
-    question: What is Azure Virtual Network (VNet)?
+    text: What is Azure Virtual Network (VNet)?
     options:
       - A storage service
       - A private network in Azure
@@ -116,7 +116,7 @@ questions:
 
   - id: q10
     type: MULTIPLE_CHOICE
-    question: Which Azure services are used for monitoring?
+    text: Which Azure services are used for monitoring?
     options:
       - Azure Monitor
       - Log Analytics
