@@ -1,15 +1,12 @@
 package com.azexam.simulator.service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.azexam.simulator.dto.AnswerDto;
 import com.azexam.simulator.dto.ExamResultResponse;
 import com.azexam.simulator.exception.BadRequestException;
 import com.azexam.simulator.model.ExamAnswer;

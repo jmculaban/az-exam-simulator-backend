@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.dto.ResumeExamResponse;
 import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +56,26 @@ public class ExamQueryService {
       questions,
       answerMap
     );
+  }
+  
+  public ExamProgressResponse getProgress(UUID sessionId) {
+    
+    // 1. Get session
+    var session = examSessionService.getSession(sessionId);
+
+    // 2. Load exam questions
+    var exam = questionLoaderService.loadExam(session.getExamCode());
+    int total = exam.getQuestions().size();
+
+    // 3. Count answers in DB
+    var answers = examAnswerRepository.findBySessionId(sessionId);
+    int answered = (int)answers.stream()
+      .map(a -> a.getQuestionId())
+      .distinct()
+      .count();
+
+    // 4. Return response
+    return new ExamProgressResponse(answered, total);
   }
 
   private String extractAnswer(String json) {

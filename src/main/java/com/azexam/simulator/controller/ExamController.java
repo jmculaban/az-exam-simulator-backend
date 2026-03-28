@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.dto.ExamResultResponse;
 import com.azexam.simulator.dto.ResumeExamResponse;
 import com.azexam.simulator.service.ExamQueryService;
@@ -52,6 +53,15 @@ public class ExamController {
     
     return ResponseEntity.ok(
       examQueryService.resumeExam(sessionId)
+    );
+  }
+
+  @GetMapping("/{sessionId}/progress")
+  public ResponseEntity<ExamProgressResponse> getProgress(
+        @PathVariable UUID sessionId) {
+    
+    return ResponseEntity.ok(
+      examQueryService.getProgress(sessionId)
     );
   }
 }

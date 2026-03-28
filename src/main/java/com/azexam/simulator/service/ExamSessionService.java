@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.model.ExamSession;
 import com.azexam.simulator.model.User;
 import com.azexam.simulator.repository.ExamSessionRepository;
