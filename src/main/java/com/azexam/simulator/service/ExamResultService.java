@@ -44,6 +44,13 @@ public class ExamResultService {
     this.scoringEngine = scoringEngine;
   }
 
+  /**
+   * Submits an exam session and computes score using stored answers.
+   *
+   * @param sessionId session id
+   * @param isAutoSubmit true when submission is scheduler-triggered
+   * @return computed exam result response
+   */
   public ExamResultResponse submitExam(UUID sessionId, boolean isAutoSubmit) {
     
     var existing = resultRepository.findBySessionId(sessionId);
@@ -120,11 +127,23 @@ public class ExamResultService {
     return new ExamResultResponse(score, correct, total, score >= 70);
   }
 
+  /**
+   * Submits an exam initiated by a user request.
+   *
+   * @param sessionId session id
+   * @return computed exam result response
+   */
   public ExamResultResponse submitExam(UUID sessionId) {
     // user-triggered
     return submitExam(sessionId, false);
   }
 
+  /**
+   * Fetches a previously stored exam result.
+   *
+   * @param sessionId session id
+   * @return existing exam result response
+   */
   public ExamResultResponse getResult(UUID sessionId) {
 
     var result = resultRepository.findBySessionId(sessionId)

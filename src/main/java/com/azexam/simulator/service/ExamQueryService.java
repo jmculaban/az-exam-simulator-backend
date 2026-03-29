@@ -51,6 +51,12 @@ public class ExamQueryService {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Builds the full payload needed by a client to resume an exam.
+   *
+   * @param sessionId session id
+   * @return resume response including sections, question state, and timer
+   */
   public ResumeExamResponse resumeExam(UUID sessionId) {
 
     // 1. Get session details
@@ -113,6 +119,12 @@ public class ExamQueryService {
     );
   }
   
+  /**
+   * Returns answered/total progress for a session.
+   *
+   * @param sessionId session id
+   * @return progress response
+   */
   public ExamProgressResponse getProgress(UUID sessionId) {
     
     // 1. Get session
@@ -135,6 +147,12 @@ public class ExamQueryService {
     return new ExamProgressResponse(answered, total);
   }
 
+  /**
+   * Returns timer state for a session.
+   *
+   * @param sessionId session id
+   * @return timer response
+   */
   public ExamTimerResponse getTimer(UUID sessionId) {
     
     var session = examSessionService.getSession(sessionId);
@@ -160,6 +178,16 @@ public class ExamQueryService {
     return new ExamTimerResponse(remainingSeconds, false);
   }
 
+  /**
+   * Returns paginated exam history for a user with optional filters.
+   *
+   * @param userId user id
+   * @param passed optional pass/fail filter
+   * @param examCode optional exam code filter
+   * @param page zero-based page index
+   * @param size page size
+   * @return page of history entries
+   */
   public Page<UserExamHistoryResponse> getUserExamHistory(
       UUID userId,
       Boolean passed,

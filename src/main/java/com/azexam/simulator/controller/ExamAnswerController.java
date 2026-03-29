@@ -31,6 +31,12 @@ public class ExamAnswerController {
     this.examAnswerService = examAnswerService;
   }
 
+  /**
+   * Saves or updates an answer for a question in an exam session.
+   *
+   * @param request answer payload
+   * @return empty success response
+   */
   @PostMapping
   public ResponseEntity<Void> saveAnswer(@Valid @RequestBody SaveAnswerRequest request) {
     
@@ -42,6 +48,12 @@ public class ExamAnswerController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * Retrieves all stored answers for a session.
+   *
+   * @param sessionId exam session id
+   * @return list of answer records
+   */
   @GetMapping("/session/{sessionId}")
   public ResponseEntity<List<ExamAnswer>> getAnswers(@PathVariable UUID sessionId) {
     log.info("Fetching answers: sessionId={}", sessionId);

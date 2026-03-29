@@ -14,6 +14,13 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   
+  /**
+   * Handles domain-level bad request exceptions.
+   *
+   * @param ex thrown bad request exception
+   * @param request current HTTP request
+   * @return standardized 400 error payload
+   */
   @ExceptionHandler(BadRequestException.class)
   public ResponseEntity<Map<String, String>> handleBadRequest(
     BadRequestException ex, 
@@ -28,6 +35,13 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(response);
   }
 
+  /**
+   * Handles bean validation failures from request payloads.
+   *
+   * @param ex validation exception containing field errors
+   * @param request current HTTP request
+   * @return standardized 400 payload with validation details
+   */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<?> handleValidationErrors(
       MethodArgumentNotValidException ex,

@@ -16,6 +16,13 @@ public class ExamQuestionStateService {
     this.examQuestionStateRepository = examQuestionStateRepository;
   }
 
+  /**
+   * Sets the flagged state for a question and marks it visited.
+   *
+   * @param sessionId session id
+   * @param questionId question id
+   * @param flagged desired flagged state
+   */
   public void flag(UUID sessionId, String questionId, boolean flagged) {
 
     var state = examQuestionStateRepository.findBySessionIdAndQuestionId(sessionId, questionId)
@@ -33,6 +40,12 @@ public class ExamQuestionStateService {
     examQuestionStateRepository.save(state);
   }
 
+  /**
+   * Marks a question as visited for a session.
+   *
+   * @param sessionId session id
+   * @param questionId question id
+   */
   public void markVisited(UUID sessionId, String questionId) {
 
     var state = examQuestionStateRepository

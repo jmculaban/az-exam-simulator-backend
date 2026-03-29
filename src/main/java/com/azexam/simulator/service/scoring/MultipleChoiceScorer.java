@@ -18,11 +18,13 @@ public class MultipleChoiceScorer implements QuestionScorer {
     this.objectMapper = objectMapper;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Boolean supports(String type) {
     return "MULTIPLE_CHOICE".equals(type);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Boolean isCorrect(QuestionYaml question, String json) {
     try {

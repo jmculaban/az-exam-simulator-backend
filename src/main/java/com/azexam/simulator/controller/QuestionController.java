@@ -29,6 +29,14 @@ public class QuestionController {
     this.examQuestionStateService = examQuestionStateService;
   }
 
+  /**
+   * Sets or unsets the flagged state for a question.
+   *
+   * @param sessionId exam session id
+   * @param questionId question id
+   * @param request flag request containing desired state
+   * @return empty success response
+   */
   @PostMapping("/{sessionId}/{questionId}/flag")
   public ResponseEntity<?> flagQuestion(
       @PathVariable UUID sessionId,
@@ -47,6 +55,13 @@ public class QuestionController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * Marks a question as visited.
+   *
+   * @param sessionId exam session id
+   * @param questionId question id
+   * @return empty success response
+   */
   @PostMapping("/{sessionId}/{questionId}/visit")
   public ResponseEntity<?> markVisited(
       @PathVariable UUID sessionId,

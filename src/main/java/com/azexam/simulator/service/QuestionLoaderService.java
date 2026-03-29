@@ -19,6 +19,12 @@ public class QuestionLoaderService {
       .findAndRegisterModules();
   }
 
+  /**
+   * Loads an exam by exam code from blob storage.
+   *
+   * @param examCode exam identifier
+   * @return parsed and validated exam payload
+   */
   public ExamYaml loadExam(String examCode) {
 
     try {

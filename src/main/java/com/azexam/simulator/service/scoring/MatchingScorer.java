@@ -17,11 +17,13 @@ public class MatchingScorer implements QuestionScorer {
     this.objectMapper = objectMapper;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Boolean supports(String type) {
     return "MATCHING".equals(type);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Boolean isCorrect(QuestionYaml question, String json) {
     try{

@@ -25,6 +25,16 @@ public class UserController {
     this.examQueryService = examQueryService;
   }
 
+  /**
+   * Retrieves paginated exam history for a user.
+   *
+   * @param userId user id
+   * @param page zero-based page index
+   * @param size page size
+   * @param passed optional pass/fail filter
+   * @param examCode optional exam code filter
+   * @return paginated user exam history
+   */
   @GetMapping("/{userId}/exam-history")
   public ResponseEntity<?> getExamHistory(
       @PathVariable UUID userId,

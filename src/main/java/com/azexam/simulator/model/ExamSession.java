@@ -1,7 +1,6 @@
 package com.azexam.simulator.model;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;

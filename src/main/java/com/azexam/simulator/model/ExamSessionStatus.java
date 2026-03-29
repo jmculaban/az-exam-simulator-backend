@@ -1,6 +1,5 @@
 package com.azexam.simulator.model;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor

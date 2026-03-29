@@ -23,6 +23,9 @@ public class AutoSubmitService {
   }
 
   // Runs every 30 seconds to check for expired sessions
+  /**
+   * Scheduled job that auto-submits sessions whose timer has elapsed.
+   */
   @Scheduled(fixedRate = 30000)
   public void autoSubmitExpiredExams() {
 

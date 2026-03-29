@@ -28,6 +28,13 @@ public class ExamSessionService {
     this.questionLoader = questionLoader;
   }
 
+  /**
+   * Creates a new in-progress exam session for a user.
+   *
+   * @param examCode exam identifier
+   * @param userId user id
+   * @return persisted exam session
+   */
   public ExamSession createSession(String examCode, UUID userId) {
     
     User user = userRepository.findById(userId)
@@ -48,15 +55,32 @@ public class ExamSessionService {
     return sessionRepository.save(session);
   }
 
+  /**
+   * Fetches an exam session by id.
+   *
+   * @param id session id
+   * @return existing exam session
+   */
   public ExamSession getSession(UUID id) {
     return sessionRepository.findById(id)
       .orElseThrow(() -> new RuntimeException("Exam session not found"));
   }
 
+  /**
+   * Retrieves all sessions for a specific user.
+   *
+   * @param userId user id
+   * @return user sessions
+   */
   public List<ExamSession> getSessionByUserId(UUID userId) {
     return sessionRepository.findByUser_Id(userId);
   }
 
+  /**
+   * Marks a session as submitted and stamps completion time.
+   *
+   * @param session session to update
+   */
   public void markAsSubmitted(ExamSession session) {
     session.setStatus("SUBMITTED");
     session.setEndTime(Instant.now());

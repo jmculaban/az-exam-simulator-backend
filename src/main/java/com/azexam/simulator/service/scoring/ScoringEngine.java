@@ -15,6 +15,13 @@ public class ScoringEngine {
     this.scorers = scorers;
   }
 
+  /**
+   * Checks whether a user answer is correct for a question.
+   *
+   * @param question question definition
+   * @param userAnswerJson serialized user answer payload
+   * @return true when answer is correct
+   */
   public boolean isCorrect(QuestionYaml question, String userAnswerJson) {
 
     return scorers.stream()

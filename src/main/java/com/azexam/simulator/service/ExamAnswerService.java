@@ -33,6 +33,11 @@ public class ExamAnswerService {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Saves or updates a user's answer for a question in a session.
+   *
+   * @param request answer request payload
+   */
   public void saveAnswer(SaveAnswerRequest request) {
     
     var session = sessionService.getSession(request.getSessionId());
@@ -91,6 +96,12 @@ public class ExamAnswerService {
     );
   }
 
+  /**
+   * Retrieves all saved answers for the provided session.
+   *
+   * @param sessionId exam session id
+   * @return list of saved answers
+   */
   public List<ExamAnswer> getAnswers(UUID sessionId) {
     return examAnswerRepository.findBySessionId(sessionId);
   }

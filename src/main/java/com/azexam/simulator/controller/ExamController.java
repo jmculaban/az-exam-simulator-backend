@@ -45,6 +45,12 @@ public class ExamController {
     this.examQueryService = examQueryService;
   }
 
+  /**
+   * Creates a new exam session for a user.
+   *
+   * @param request start exam request payload
+   * @return created exam session
+   */
   @PostMapping("/start")
   public ResponseEntity<ExamSession> createSession(@Valid @RequestBody StartExamRequest request) {
     
@@ -58,6 +64,12 @@ public class ExamController {
     );
   }
 
+  /**
+   * Retrieves a session by its identifier.
+   *
+   * @param sessionId exam session id
+   * @return session details
+   */
   @GetMapping("/{sessionId}")
   public ResponseEntity<ExamSession> getSession(@PathVariable UUID sessionId) {
     
@@ -66,6 +78,12 @@ public class ExamController {
     return ResponseEntity.ok(examService.getSession(sessionId));
   }
 
+  /**
+   * Submits an exam and calculates the final result.
+   *
+   * @param sessionId exam session id
+   * @return computed exam result
+   */
   @PostMapping("/{sessionId}/submit")
   public ResponseEntity<ExamResultResponse> submit(
       @PathVariable UUID sessionId) {
@@ -77,6 +95,12 @@ public class ExamController {
     );
   }
 
+  /**
+   * Fetches the persisted result for a submitted exam.
+   *
+   * @param sessionId exam session id
+   * @return exam result payload
+   */
   @GetMapping("/{sessionId}/result")
   public ResponseEntity<ExamResultResponse> getResult(
         @PathVariable UUID sessionId) {
@@ -88,6 +112,12 @@ public class ExamController {
     );
   }
 
+  /**
+   * Returns all data required to resume an ongoing exam.
+   *
+   * @param sessionId exam session id
+   * @return resume payload with sections, questions, and timer
+   */
   @GetMapping("/{sessionId}/resume")
   public ResponseEntity<ResumeExamResponse> resumeExam(
         @PathVariable UUID sessionId) {
@@ -99,6 +129,12 @@ public class ExamController {
     );
   }
 
+  /**
+   * Returns progress statistics for an exam session.
+   *
+   * @param sessionId exam session id
+   * @return answered and total question counts
+   */
   @GetMapping("/{sessionId}/progress")
   public ResponseEntity<ExamProgressResponse> getProgress(
         @PathVariable UUID sessionId) {
@@ -110,6 +146,12 @@ public class ExamController {
     );
   }
 
+  /**
+   * Returns timer status for an exam session.
+   *
+   * @param sessionId exam session id
+   * @return timer response with remaining seconds and expiration flag
+   */
   @GetMapping("/{sessionId}/timer")
   public ResponseEntity<ExamTimerResponse> getTimer(
         @PathVariable UUID sessionId) {

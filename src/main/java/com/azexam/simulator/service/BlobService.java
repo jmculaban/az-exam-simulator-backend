@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
-import com.azure.storage.blob.BlobServiceClient;
-import com.azure.storage.blob.BlobServiceClientBuilder;
 
 @Service
 public class BlobService {
@@ -38,6 +36,12 @@ public class BlobService {
     );
   }
 
+  /**
+   * Downloads a blob as a UTF-8 string.
+   *
+   * @param filename blob filename
+   * @return file content as text
+   */
   public String downloadFile(String filename) {
 
     BlobClient blobClient = blobContainerClient.getBlobClient(filename);
