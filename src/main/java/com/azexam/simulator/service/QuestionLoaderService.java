@@ -1,5 +1,6 @@
 package com.azexam.simulator.service;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.model.yaml.ExamYaml;
@@ -28,6 +29,7 @@ public class QuestionLoaderService {
    * @param examCode exam identifier
    * @return parsed and validated exam payload
    */
+  @Cacheable("exam")
   public ExamYaml loadExam(String examCode) {
 
     try {

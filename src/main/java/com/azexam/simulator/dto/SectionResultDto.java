@@ -1,18 +1,16 @@
 package com.azexam.simulator.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ExamResultResponse {
+public class SectionResultDto {
   
-  private Integer score;
+  private String sectionId;
+  private String title;
+
   private Integer correct;
   private Integer total;
-  private Boolean passed;
-
-  private List<SectionResultDto> sections;
+  private Double score;
 }
