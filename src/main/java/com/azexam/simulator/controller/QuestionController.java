@@ -38,13 +38,13 @@ public class QuestionController {
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{questionId}/visit")
+  @PostMapping("/{sessionId}/{questionId}/visit")
   public ResponseEntity<?> markVisited(
-      @PathVariable String questionId,
-      @RequestBody FlagRequest request) {
+      @PathVariable UUID sessionId,
+      @PathVariable String questionId) {
 
     examQuestionStateService.markVisited(
-      request.getSessionId(),
+      sessionId,
       questionId
     );
 

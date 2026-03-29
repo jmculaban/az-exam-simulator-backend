@@ -1,102 +1,313 @@
 # Azure Exam Simulator Backend
 
-Spring Boot backend for the Azure Exam Simulator. The service manages exam sessions, question delivery, answer persistence, scoring, resume/progress queries, and user exam history.
+Spring Boot 3.5 REST API for managing online exam sessions, question delivery, answer evaluation, and result tracking. Supports multiple-choice, ordering, and matching question types with real-time progress and resume capabilities.
 
-## Stack
+## Tech Stack
 
-- Java 21
-- Spring Boot 3.5
-- Spring Web
-- Spring Data JPA
-- Flyway
-- PostgreSQL
-- Azure Blob Storage
-- Maven
+| Component | Technology |
+|-----------|-----------|
+| Runtime | Java 21 |
+| Framework | Spring Boot 3.5 |
+| Database | PostgreSQL |
+| Migrations | Flyway 11.7 |
+| Storage | Azure Blob Storage |
+| Build | Maven 3.9+ |
+| Serialization | Jackson YAML |
+| Data Access | Spring Data JPA + Lombok |
 
-## What It Does
+## Core Features
 
-- Creates exam sessions for a user and exam code
-- Loads question sets from Azure Blob Storage YAML files
-- Saves answers during an exam session
-- Calculates and returns exam results
-- Supports resume, progress, timer, and user exam history queries
+- **Session Management**: Create and retrieve exam sessions with configurable duration
+- **Multi-Type Questions**: SINGLE_CHOICE, MULTIPLE_CHOICE, ORDERING, MATCHING
+- **YAML-Based Question Bank**: Load exams from Azure Blob Storage YAML (e.g., `az-900.yml`)
+- **Answer Persistence**: Save answers in real-time (stored as JSONB in PostgreSQL)
+- **Auto-Scoring**: Calculate results on exam submission with pass/fail determination
+- **Resume Support**: Track visited and flagged questions; resume incomplete exams
+- **Progress Tracking**: Per-session progress percentage and answered count
+- **Timer Service**: Automatic submission after exam duration expires
+- **Exam History**: Query user exam attempts with scores and timestamps
 
-## Project Layout
+## API Endpoints
 
-```text
-az-exam-simulator-backend/
-├── question-bank/
-│   └── az-900.yml
-├── src/
-│   ├── main/
-│   │   ├── java/com/azexam/simulator/
-│   │   │   ├── controller/
-│   │   │   ├── dto/
-│   │   │   ├── model/
-│   │   │   ├── repository/
-│   │   │   └── service/
-│   │   └── resources/
-│   │       ├── application.yaml
-│   │       └── db/migration/
-│   └── test/
-│       ├── java/com/azexam/simulator/
-│       └── resources/application-test.yml
-├── Dockerfile
-├── pom.xml
-└── README.md
+### Exam Session Management (`/api/exams`)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/start` | Create new exam session |
+| GET | `/{sessionId}` | Get session details |
+| POST | `/{sessionId}/submit` | Submit exam and get results |
+| GET | `/{sessionId}/result` | Retrieve exam results and score |
+| GET | `/{sessionId}/resume` | Resume incomplete exam with saved answers |
+| GET | `/{sessionId}/progress` | Get answered/total question count |
+| GET | `/{sessionId}/timer` | Get remaining time in seconds |
+
+### Answer Management (`/api/exam-answers`)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/` | Save user answer for a question |
+| GET | `/session/{sessionId}` | Retrieve all answers for exam |
+
+### Question State (`/api/exam-state`)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/{sessionId}/{questionId}/flag` | Flag question for review |
+| POST | `/{sessionId}/{questionId}/visit` | Mark question as visited |
+
+### User History (`/api/users`)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/{userId}/exam-history` | Get all past exam attempts |
+
+## Database Schema
+
+### Core Tables
+
+**`users`**
+- `id` (UUID, PK) — User identifier
+- `email` (VARCHAR) — User email address
+
+**`exam_session`**
+- `id` (UUID, PK) — Session identifier
+- `user_id` (UUID, FK → users) — User taking exam
+- `exam_code` (VARCHAR) — Exam type (e.g., "az-900")
+- `status` (VARCHAR) — IN_PROGRESS or SUBMITTED
+- `duration_minutes` (INT) — Exam time limit
+- `start_time` (TIMESTAMP) — When exam started
+- `end_time` (TIMESTAMP) — When exam must end
+
+**`exam_answer`**
+- `id` (UUID, PK) — Answer record identifier
+- `session_id` (UUID, FK → exam_session) — Exam session reference
+- `question_id` (VARCHAR) — Question identifier in exam
+- `answer` (JSONB) — User's answer (format depends on question type)
+- `created_at`, `updated_at` (TIMESTAMP) — Metadata
+
+**`exam_result`**
+- `id` (UUID, PK) — Result record identifier
+- `session_id` (UUID, FK → exam_session, UNIQUE) — Session reference
+- `score` (INT) — Percentage score
+- `correct` (INT) — Number of correct answers
+- `total` (INT) — Total questions
+- `passed` (BOOLEAN) — Pass/fail status
+- `submitted_at` (TIMESTAMP) — When exam was submitted
+
+**`exam_question_state`**
+- `id` (UUID, PK) — State record identifier
+- `session_id` (UUID, FK → exam_session) — Session reference
+- `question_id` (VARCHAR) — Question identifier
+- `visited` (BOOLEAN) — Whether question has been viewed
+- `flagged` (BOOLEAN) — Whether flagged for review
+
+## Question Bank Format (YAML)
+
+```yaml
+examCode: az-900
+title: Microsoft Azure Fundamentals
+durationMinutes: 60
+
+questions:
+  - id: q1
+    type: SINGLE_CHOICE
+    text: "What is Azure?"
+    options:
+      - "Cloud platform by Microsoft"
+      - "Programming language"
+      - "Database system"
+    correctAnswer: "Cloud platform by Microsoft"
+
+  - id: q2
+    type: MULTIPLE_CHOICE
+    text: "Which are Azure services?"
+    options:
+      - "Virtual Machines"
+      - "Azure Functions"
+      - "Blob Storage"
+    correctAnswers:
+      - "Virtual Machines"
+      - "Azure Functions"
+      - "Blob Storage"
+
+  - id: q3
+    type: ORDERING
+    text: "Order deployment steps"
+    options:
+      - "Select subscription"
+      - "Choose VM image"
+      - "Document review"
+    correctOrder:
+      - "Select subscription"
+      - "Choose VM image"
+      - "Document review"
+
+  - id: q4
+    type: MATCHING
+    text: "Match services to categories"
+    options:
+      vm: "Virtual Machine"
+      blob: "Blob Storage"
+      vnet: "Virtual Network"
+    correctMap:
+      vm: "compute"
+      blob: "storage"
+      vnet: "networking"
 ```
 
 ## Prerequisites
 
-- Java 21
+- Java 21 (JDK)
 - Maven 3.9+
-- PostgreSQL reachable from your runtime environment
-- Azure Blob Storage container containing exam YAML files
+- PostgreSQL 13+ server
+- Azure Storage Account with container and SAS token
 
-## Configuration
+## Quick Start
 
-The application supports Spring property binding from environment variables. For local development and Azure App Service, prefer environment variables instead of hardcoding values.
+### 1. Clone and Navigate
 
-### Required Database Settings
-
-- `SPRING_DATASOURCE_URL`
-- `SPRING_DATASOURCE_USERNAME`
-- `SPRING_DATASOURCE_PASSWORD`
-
-Example:
-
-```powershell
-$env:SPRING_DATASOURCE_URL="jdbc:postgresql://<host>:5432/postgres?sslmode=require"
-$env:SPRING_DATASOURCE_USERNAME="adminuser"
-$env:SPRING_DATASOURCE_PASSWORD="your-password"
+```bash
+cd az-exam-simulator-backend
 ```
 
-### Required Blob Storage Settings
+### 2. Set Environment Variables
 
-Use one of these options.
-
-Option 1: Connection string
-
-- `AZURE_STORAGE_CONNECTION_STRING`
-- `AZURE_STORAGE_CONTAINER_NAME`
-
-Option 2: Blob endpoint plus SAS token
-
-- `AZURE_STORAGE_BLOB_ENDPOINT`
-- `AZURE_STORAGE_SAS_TOKEN`
-- `AZURE_STORAGE_CONTAINER_NAME`
-
-Example:
-
+#### Windows PowerShell
 ```powershell
-$env:AZURE_STORAGE_BLOB_ENDPOINT="https://<account>.blob.core.windows.net/"
-$env:AZURE_STORAGE_SAS_TOKEN="?<sas-token>"
-$env:AZURE_STORAGE_CONTAINER_NAME="question-bank"
+$env:SPRING_DATASOURCE_URL = "jdbc:postgresql://localhost:5432/exams?sslmode=disable"
+$env:SPRING_DATASOURCE_USERNAME = "postgres"
+$env:SPRING_DATASOURCE_PASSWORD = "your-password"
+$env:AZURE_STORAGE_BLOB_ENDPOINT = "https://<account>.blob.core.windows.net/"
+$env:AZURE_STORAGE_SAS_TOKEN = "?se=2026-12-31T23:59:00Z&sp=rwdlac&..."
+$env:AZURE_STORAGE_CONTAINER_NAME = "question-bank"
+$env:SERVER_PORT = "8081"
 ```
 
-### Server Port
+#### Linux/macOS
+```bash
+export SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/exams"
+export SPRING_DATASOURCE_USERNAME="postgres"
+export SPRING_DATASOURCE_PASSWORD="your-password"
+export AZURE_STORAGE_BLOB_ENDPOINT="https://<account>.blob.core.windows.net/"
+export AZURE_STORAGE_SAS_TOKEN="?se=2026-12-31T23:59:00Z&sp=rwdlac&..."
+export AZURE_STORAGE_CONTAINER_NAME="question-bank"
+export SERVER_PORT="8081"
+```
 
-- `SERVER_PORT`
+### 3. Build
+
+```bash
+mvn clean package
+```
+
+### 4. Run
+
+```bash
+mvn spring-boot:run
+```
+
+The API will be available at `http://localhost:8081/api/`.
+
+## Configuration Details
+
+### Database Connection
+
+- `SPRING_DATASOURCE_URL` — PostgreSQL JDBC URL (include `?sslmode=require` for Azure)
+- `SPRING_DATASOURCE_USERNAME` — Database user
+- `SPRING_DATASOURCE_PASSWORD` — Database password
+
+### Azure Blob Storage
+
+Provide **either** option:
+
+**Option A: Connection String**
+- `AZURE_STORAGE_CONNECTION_STRING` — Full connection string
+- `AZURE_STORAGE_CONTAINER_NAME` — Container name (e.g., "question-bank")
+
+**Option B: Endpoint + SAS Token** (recommended for managed identity scenarios)
+- `AZURE_STORAGE_BLOB_ENDPOINT` — Blob endpoint (e.g., `https://account.blob.core.windows.net/`)
+- `AZURE_STORAGE_SAS_TOKEN` — SAS token with read permissions
+- `AZURE_STORAGE_CONTAINER_NAME` — Container name
+
+### Application Settings
+
+- `SERVER_PORT` — HTTP port (default: 8081)
+- `MANAGEMENT_PORT` — Actuator/metrics port (default: 8081)
+
+## Docker Build
+
+```bash
+docker build -t az-exam-simulator-backend:latest .
+docker run -p 8081:8081 \
+  -e SPRING_DATASOURCE_URL="jdbc:postgresql://db:5432/exams?sslmode=disable" \
+  -e SPRING_DATASOURCE_USERNAME="postgres" \
+  -e SPRING_DATASOURCE_PASSWORD="password" \
+  -e AZURE_STORAGE_BLOB_ENDPOINT="https://<account>.blob.core.windows.net/" \
+  -e AZURE_STORAGE_SAS_TOKEN="?..." \
+  -e AZURE_STORAGE_CONTAINER_NAME="question-bank" \
+  az-exam-simulator-backend:latest
+```
+
+## Project Structure
+
+```
+src/main/java/com/azexam/simulator/
+├── controller/        — REST endpoints (4 controllers)
+│   ├── ExamController
+│   ├── ExamAnswerController
+│   ├── QuestionController
+│   └── UserController
+├── service/           — Business logic (9 services)
+│   ├── ExamSessionService
+│   ├── ExamAnswerService
+│   ├── ExamResultService
+│   ├── ExamQueryService
+│   ├── QuestionLoaderService
+│   ├── BlobService
+│   ├── AutoSubmitService
+│   ├── QuestionLoaderService
+│   └── scoring/       — Scoring strategies per question type
+├── model/             — JPA entities (6 models)
+│   ├── ExamSession
+│   ├── ExamAnswer
+│   ├── ExamResult
+│   ├── ExamQuestionState
+│   ├── User
+│   └── yaml/          — YAML deserialization models
+├── repository/        — Spring Data JPA repositories
+├── dto/               — Request/response DTOs
+└── exception/         — Custom exceptions
+```
+
+## Testing
+
+Run tests with:
+```bash
+mvn test
+```
+
+Tests use H2 in-memory database and are configured via `src/test/resources/application-test.yml`.
+
+## Health Check
+
+Actuator endpoints:
+```
+GET http://localhost:8081/actuator/health
+GET http://localhost:8081/actuator/metrics
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Flyway migration error | Check `src/main/resources/db/migration/` SQL syntax; ensure database exists |
+| Blob access denied | Verify SAS token has `read` (r) and `list` (l) permissions |
+| Connection refused | Ensure PostgreSQL is running and `SPRING_DATASOURCE_URL` is correct |
+| YAML parsing error | Validate YAML format in question bank; check indentation and quotes |
+
+## License
+
+Proprietary — Azure Exam Simulator Project
 
 Defaults:
 
