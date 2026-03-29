@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.azexam.simulator.service.ExamQueryService;
 
+/**
+ * REST endpoints related to user-level exam querying.
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

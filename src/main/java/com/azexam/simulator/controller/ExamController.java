@@ -26,6 +26,9 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * REST endpoints for exam lifecycle operations.
+ */
 @RestController
 @RequestMapping("/api/exams")
 public class ExamController {
@@ -160,6 +163,17 @@ public class ExamController {
     
     return ResponseEntity.ok(
       examQueryService.getTimer(sessionId)
+    );
+  }
+
+  @GetMapping("/{sessionId}/review")
+  public ResponseEntity<?> getReview(
+        @PathVariable UUID sessionId) {
+    
+    log.info("Review exam: sessionId={}", sessionId);
+    
+    return ResponseEntity.ok(
+      examQueryService.getReview(sessionId)
     );
   }
 }

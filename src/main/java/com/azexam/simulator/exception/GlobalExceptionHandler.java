@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Centralized exception mapping for REST endpoints.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   

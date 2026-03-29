@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import com.azexam.simulator.model.ExamQuestionState;
 import com.azexam.simulator.repository.ExamQuestionStateRepository;
 
+/**
+ * Persists per-question UI state for an exam session.
+ */
 @Service
 public class ExamQuestionStateService {
   

@@ -11,6 +11,9 @@ import com.azexam.simulator.model.User;
 import com.azexam.simulator.repository.ExamSessionRepository;
 import com.azexam.simulator.repository.UserRepository;
 
+/**
+ * Manages creation and lifecycle updates of exam sessions.
+ */
 @Service
 public class ExamSessionService {
   

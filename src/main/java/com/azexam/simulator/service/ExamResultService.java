@@ -18,6 +18,9 @@ import com.azexam.simulator.repository.ExamResultRepository;
 import com.azexam.simulator.service.scoring.ScoringEngine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Computes and retrieves exam results.
+ */
 @Service
 public class ExamResultService {
   

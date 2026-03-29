@@ -1,5 +1,8 @@
 package com.azexam.simulator.service.scoring;
 
+/**
+ * Utility helpers shared by scorer implementations.
+ */
 public class ScoringUtils {
   
   /**

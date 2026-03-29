@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * REST endpoints for per-question state tracking in an exam session.
+ */
 @RestController
 @RequestMapping("/api/exam-state")
 public class QuestionController {

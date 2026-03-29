@@ -9,6 +9,9 @@ import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Scores multiple-choice questions by set equality after normalization.
+ */
 @Component
 public class MultipleChoiceScorer implements QuestionScorer {
   

@@ -8,6 +8,9 @@ import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Scores matching questions by key/value map comparison.
+ */
 @Component
 public class MatchingScorer implements QuestionScorer {
   

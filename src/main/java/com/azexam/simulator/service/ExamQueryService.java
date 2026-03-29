@@ -16,6 +16,9 @@ import com.azexam.simulator.dto.ExamTimerResponse;
 import com.azexam.simulator.dto.NavigationDto;
 import com.azexam.simulator.dto.QuestionResponse;
 import com.azexam.simulator.dto.ResumeExamResponse;
+import com.azexam.simulator.dto.ReviewExamResponse;
+import com.azexam.simulator.dto.ReviewQuestionDto;
+import com.azexam.simulator.dto.ReviewSectionDto;
 import com.azexam.simulator.dto.SectionResponseDto;
 import com.azexam.simulator.dto.UserExamHistoryResponse;
 import com.azexam.simulator.model.ExamQuestionState;
@@ -23,9 +26,14 @@ import com.azexam.simulator.model.ExamSession;
 import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.azexam.simulator.repository.ExamQuestionStateRepository;
+import com.azexam.simulator.repository.ExamResultRepository;
 import com.azexam.simulator.repository.ExamSessionRepository;
+import com.azexam.simulator.service.scoring.ScoringEngine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Provides read-oriented exam queries such as resume, progress, timer, and history.
+ */
 @Service
 public class ExamQueryService {
   
@@ -34,7 +42,9 @@ public class ExamQueryService {
   private final ExamAnswerRepository examAnswerRepository;
   private final ExamSessionRepository examSessionRepository;
   private final ExamQuestionStateRepository examQuestionStateRepository;
+  private final ExamResultRepository examResultRepository;
   private final ObjectMapper objectMapper;
+  private final ScoringEngine scoringEngine;
 
   public ExamQueryService(
       ExamSessionService examSessionService,
@@ -42,13 +52,17 @@ public class ExamQueryService {
       ExamAnswerRepository examAnswerRepository,
       ExamSessionRepository examSessionRepository,
       ExamQuestionStateRepository examQuestionStateRepository,
-      ObjectMapper objectMapper) {
+      ExamResultRepository examResultRepository,
+      ObjectMapper objectMapper,
+      ScoringEngine scoringEngine) {
     this.examSessionService = examSessionService;
     this.questionLoaderService = questionLoaderService;
     this.examAnswerRepository = examAnswerRepository;
     this.examSessionRepository = examSessionRepository;
     this.examQuestionStateRepository = examQuestionStateRepository;
+    this.examResultRepository = examResultRepository;
     this.objectMapper = objectMapper;
+    this.scoringEngine = scoringEngine;
   }
 
   /**
@@ -205,6 +219,74 @@ public class ExamQueryService {
     );
   }
 
+  public ReviewExamResponse getReview(UUID sessionId) {
+    
+    // 1. Get session
+    var session = examSessionService.getSession(sessionId);
+
+    if (!"SUBMITTED".equals(session.getStatus())) {
+      throw new IllegalStateException("Exam not submitted yet");
+    }
+
+    // 2. Get result
+    var result = examResultRepository.findBySessionId(sessionId)
+      .orElseThrow(() -> new RuntimeException("Exam result not found"));
+    
+    // 3. Load exam
+    var exam = questionLoaderService.loadExam(session.getExamCode());
+
+    // 4. Load answers
+    var answers = examAnswerRepository.findBySessionId(sessionId);
+
+    Map<String, String> answerMap = answers.stream()
+      .collect(Collectors.toMap(
+        a -> a.getQuestionId(),
+        a -> a.getAnswer()
+      ));
+
+    // 5. Build sections
+    var sections = exam.getSections().stream().map(section -> {
+
+      var questions = section.getQuestions().stream().map(q -> {
+
+        Object userAnswer = null;
+        boolean isCorrect = false;
+
+        if (answerMap.containsKey(q.getId())) {
+          userAnswer = parseJson(answerMap.get(q.getId()));
+          isCorrect = scoringEngine.isCorrect(q, answerMap.get(q.getId()));
+        }
+
+        Object correctAnswer = resolveCorrectAnswer(q);
+
+        return new ReviewQuestionDto(
+          q.getId(),
+          q.getText(),
+          q.getType(),
+          resolveOptions(q),
+          userAnswer,
+          correctAnswer,
+          isCorrect
+        );
+      }).toList();
+
+      return new ReviewSectionDto(
+        section.getId(),
+        section.getTitle(),
+        questions
+      );
+    }).toList();
+
+    return new ReviewExamResponse(
+      sessionId,
+      result.getScore(),
+      result.getCorrect(),
+      result.getTotal(),
+      result.getPassed(),
+      sections
+    );
+  }
+
   private Object extractAnswer(String json) {
     try {
       return objectMapper.readValue(json, Object.class);
@@ -247,5 +329,23 @@ public class ExamQueryService {
     long remaining = Duration.between(Instant.now(), endTime).getSeconds();
 
     return new ExamTimerResponse(Math.max(remaining, 0), remaining <= 0);
+  }
+
+  private Object parseJson(String json) {
+    try {
+      return objectMapper.readValue(json, Object.class);
+    } catch (Exception e) {
+      return json;
+    }
+  }
+
+  private Object resolveCorrectAnswer(QuestionYaml question) {
+
+    if (question.getCorrectAnswer() != null) return question.getCorrectAnswer();
+    if (question.getCorrectAnswers() != null) return question.getCorrectAnswers();
+    if (question.getCorrectOrder() != null) return question.getCorrectOrder();
+    if (question.getCorrectMap() != null) return question.getCorrectMap();
+    
+    return null;
   }
 }

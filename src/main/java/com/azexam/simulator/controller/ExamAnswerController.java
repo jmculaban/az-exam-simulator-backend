@@ -19,6 +19,9 @@ import com.azexam.simulator.service.ExamAnswerService;
 
 import jakarta.validation.Valid;
 
+/**
+ * REST endpoints for persisting and retrieving exam answers.
+ */
 @RestController
 @RequestMapping("/api/exam-answers")
 public class ExamAnswerController {

@@ -9,6 +9,9 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 
+/**
+ * Downloads exam artifacts from Azure Blob Storage.
+ */
 @Service
 public class BlobService {
   

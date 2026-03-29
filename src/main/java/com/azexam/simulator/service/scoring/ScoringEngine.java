@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import com.azexam.simulator.model.yaml.QuestionYaml;
 
+/**
+ * Delegates answer evaluation to the first matching question scorer strategy.
+ */
 @Component
 public class ScoringEngine {
   

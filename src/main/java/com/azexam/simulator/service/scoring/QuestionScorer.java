@@ -2,6 +2,9 @@ package com.azexam.simulator.service.scoring;
 
 import com.azexam.simulator.model.yaml.QuestionYaml;
 
+/**
+ * Strategy contract for evaluating a specific question type.
+ */
 public interface QuestionScorer {
   
   /**

@@ -7,6 +7,9 @@ import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+/**
+ * Loads and validates exam definitions from YAML files in blob storage.
+ */
 @Service
 public class QuestionLoaderService {
   

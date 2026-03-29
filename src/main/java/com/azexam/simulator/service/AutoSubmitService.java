@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.repository.ExamSessionRepository;
 
+/**
+ * Periodically checks active sessions and submits expired exams.
+ */
 @Service
 public class AutoSubmitService {
   

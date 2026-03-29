@@ -8,6 +8,9 @@ import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Scores ordering questions by position-sensitive comparison.
+ */
 @Component
 public class OrderingScorer implements QuestionScorer {
   

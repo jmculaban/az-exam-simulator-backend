@@ -14,6 +14,9 @@ import com.azexam.simulator.repository.ExamAnswerRepository;
 import com.azexam.simulator.repository.ExamQuestionStateRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Handles persistence of answers and related question-state updates.
+ */
 @Service
 public class ExamAnswerService {
   

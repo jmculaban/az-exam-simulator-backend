@@ -446,3 +446,6 @@ The container exposes port `8080`.
 - Local startup depends on reachable PostgreSQL unless overridden
 - If App Service starts but exam endpoints fail, check blob storage settings first
 - If Azure startup fails during Flyway initialization, check PostgreSQL firewall and network access
+
+## TO DO:
+- Update YAML model to include explanation `private String explanation`

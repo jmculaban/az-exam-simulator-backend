@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import com.azexam.simulator.model.yaml.QuestionYaml;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Scores single-choice questions.
+ */
 @Component
 public class SingleChoiceScorer implements QuestionScorer {
   
