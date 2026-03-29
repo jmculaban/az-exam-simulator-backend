@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.azexam.simulator.dto.FlagRequest;
 import com.azexam.simulator.service.ExamQuestionStateService;
 
+import jakarta.validation.Valid;
+
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -31,7 +33,7 @@ public class QuestionController {
   public ResponseEntity<?> flagQuestion(
       @PathVariable UUID sessionId,
       @PathVariable String questionId,
-      @RequestBody FlagRequest request) {
+      @Valid @RequestBody FlagRequest request) {
 
     log.info("Flagging question: sessionId={}, questionId={}, flagged={}", 
       sessionId, questionId, request.isFlagged());

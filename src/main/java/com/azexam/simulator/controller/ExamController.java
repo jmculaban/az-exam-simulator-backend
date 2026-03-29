@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.azexam.simulator.dto.CreateSessionRequest;
+import com.azexam.simulator.dto.StartExamRequest;
 import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.dto.ExamResultResponse;
 import com.azexam.simulator.dto.ExamTimerResponse;
@@ -21,6 +21,8 @@ import com.azexam.simulator.model.ExamSession;
 import com.azexam.simulator.service.ExamQueryService;
 import com.azexam.simulator.service.ExamResultService;
 import com.azexam.simulator.service.ExamSessionService;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -44,7 +46,7 @@ public class ExamController {
   }
 
   @PostMapping("/start")
-  public ResponseEntity<ExamSession> createSession(@RequestBody CreateSessionRequest request) {
+  public ResponseEntity<ExamSession> createSession(@Valid @RequestBody StartExamRequest request) {
     
     log.info("Creating exam session: userId={}, examCode={}", request.getUserId(), request.getExamCode());
 

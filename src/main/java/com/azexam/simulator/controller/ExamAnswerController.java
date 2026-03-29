@@ -17,6 +17,8 @@ import com.azexam.simulator.dto.SaveAnswerRequest;
 import com.azexam.simulator.model.ExamAnswer;
 import com.azexam.simulator.service.ExamAnswerService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/exam-answers")
 public class ExamAnswerController {
@@ -30,7 +32,7 @@ public class ExamAnswerController {
   }
 
   @PostMapping
-  public ResponseEntity<Void> saveAnswer(@RequestBody SaveAnswerRequest request) {
+  public ResponseEntity<Void> saveAnswer(@Valid @RequestBody SaveAnswerRequest request) {
     
     log.info("Saving answer: sessionId={}, questionId={}", 
       request.getSessionId(), request.getQuestionId());
