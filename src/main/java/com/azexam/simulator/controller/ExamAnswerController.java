@@ -3,6 +3,8 @@ package com.azexam.simulator.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,8 @@ import com.azexam.simulator.service.ExamAnswerService;
 @RequestMapping("/api/exam-answers")
 public class ExamAnswerController {
   
+  private static final Logger log = LoggerFactory.getLogger(ExamAnswerController.class);
+
   private final ExamAnswerService examAnswerService;
 
   public ExamAnswerController(ExamAnswerService examAnswerService) {
@@ -28,6 +32,9 @@ public class ExamAnswerController {
   @PostMapping
   public ResponseEntity<Void> saveAnswer(@RequestBody SaveAnswerRequest request) {
     
+    log.info("Saving answer: sessionId={}, questionId={}", 
+      request.getSessionId(), request.getQuestionId());
+    
     examAnswerService.saveAnswer(request);
 
     return ResponseEntity.ok().build();
@@ -35,6 +42,7 @@ public class ExamAnswerController {
 
   @GetMapping("/session/{sessionId}")
   public ResponseEntity<List<ExamAnswer>> getAnswers(@PathVariable UUID sessionId) {
+    log.info("Fetching answers: sessionId={}", sessionId);
 
     return ResponseEntity.ok(examAnswerService.getAnswers(sessionId));
   }

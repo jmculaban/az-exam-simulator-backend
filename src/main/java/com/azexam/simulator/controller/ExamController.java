@@ -2,6 +2,8 @@ package com.azexam.simulator.controller;
 
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/api/exams")
 public class ExamController {
   
+  private static final Logger log = LoggerFactory.getLogger(ExamController.class);
+
   private final ExamSessionService examService;
   private final ExamResultService examResultService;
   private final ExamQueryService examQueryService;
@@ -41,6 +45,9 @@ public class ExamController {
 
   @PostMapping("/start")
   public ResponseEntity<ExamSession> createSession(@RequestBody CreateSessionRequest request) {
+    
+    log.info("Creating exam session: userId={}, examCode={}", request.getUserId(), request.getExamCode());
+
     return ResponseEntity.status(HttpStatus.CREATED).body(
       examService.createSession(
         request.getExamCode(), 
@@ -51,13 +58,18 @@ public class ExamController {
 
   @GetMapping("/{sessionId}")
   public ResponseEntity<ExamSession> getSession(@PathVariable UUID sessionId) {
-      return ResponseEntity.ok(examService.getSession(sessionId));
+    
+    log.info("Fetching exam session details: sessionId={}", sessionId);
+    
+    return ResponseEntity.ok(examService.getSession(sessionId));
   }
 
   @PostMapping("/{sessionId}/submit")
   public ResponseEntity<ExamResultResponse> submit(
       @PathVariable UUID sessionId) {
 
+    log.info("Submitting exam: sessionId={}", sessionId);
+    
     return ResponseEntity.ok(
       examResultService.submitExam(sessionId)
     );
@@ -67,14 +79,18 @@ public class ExamController {
   public ResponseEntity<ExamResultResponse> getResult(
         @PathVariable UUID sessionId) {
       
-      return ResponseEntity.ok(
-        examResultService.getResult(sessionId)
-      );
+    log.info("Fetching exam result: sessionId={}", sessionId);
+      
+    return ResponseEntity.ok(
+      examResultService.getResult(sessionId)
+    );
   }
 
   @GetMapping("/{sessionId}/resume")
   public ResponseEntity<ResumeExamResponse> resumeExam(
         @PathVariable UUID sessionId) {
+    
+    log.info("Resuming exam: sessionId={}", sessionId);
     
     return ResponseEntity.ok(
       examQueryService.resumeExam(sessionId)
@@ -85,6 +101,8 @@ public class ExamController {
   public ResponseEntity<ExamProgressResponse> getProgress(
         @PathVariable UUID sessionId) {
     
+    log.info("Fetching exam progress: sessionId={}", sessionId);
+    
     return ResponseEntity.ok(
       examQueryService.getProgress(sessionId)
     );
@@ -93,6 +111,8 @@ public class ExamController {
   @GetMapping("/{sessionId}/timer")
   public ResponseEntity<ExamTimerResponse> getTimer(
         @PathVariable UUID sessionId) {
+    
+    log.info("Fetching exam timer: sessionId={}", sessionId);
     
     return ResponseEntity.ok(
       examQueryService.getTimer(sessionId)
