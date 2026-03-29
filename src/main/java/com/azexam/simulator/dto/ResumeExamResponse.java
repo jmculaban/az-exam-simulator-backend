@@ -1,29 +1,20 @@
 package com.azexam.simulator.dto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 public class ResumeExamResponse {
   
   private UUID sessionId;
   private String status;
-  private List<?> questions;
-  private Map<String, Object> answers;
+  private String examCode;
 
-  public ResumeExamResponse(
-      UUID sessionId, 
-      String status, 
-      List<?> questions, 
-      Map<String, Object> answers) {
-    this.sessionId = sessionId;
-    this.status = status;
-    this.questions = questions;
-    this.answers = answers;
-  }
+  private ExamTimerResponse timer;
+  private List<SectionResponseDto> sections;
+  private NavigationDto navigationDto;
 }

@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class QuestionYaml {
+  
   private String id;
-  private String text;
   private String type;
+  private String text;
   
   // OPTIONS
   private List<String> options;

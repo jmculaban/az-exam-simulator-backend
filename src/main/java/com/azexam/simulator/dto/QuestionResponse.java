@@ -2,19 +2,23 @@ package com.azexam.simulator.dto;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class QuestionResponse {
+  
   private String id;
-  private String question;
-  private List<String> choices;
+  private String text;
+  private String type;
 
-  public QuestionResponse(String id, String question, List<String> choices) {
-    this.id = id;
-    this.question = question;
-    this.choices = choices;
-  }
+  private Object options;
+  private Object answer;
+
+  private boolean isAnswered;
+  private boolean isFlagged;
+  private boolean visited;
 }

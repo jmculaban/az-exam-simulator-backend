@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ExamYaml {
-  private String examCode;
-  private Integer durationMinutes;
-  private List<SectionYaml> sections;
+public class SectionYaml {
+  private String id;
+  private String title;
+  private List<QuestionYaml> questions;
 }

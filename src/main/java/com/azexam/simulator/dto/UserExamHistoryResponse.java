@@ -13,14 +13,14 @@ public class UserExamHistoryResponse {
   private UUID sessionId;
   private String examCode;
   private Integer score;
-  private Boolean passed;
+  private boolean passed;
   private Instant submittedAt;
 
   public UserExamHistoryResponse(
       UUID sessionId, 
       String examCode, 
       Integer score, 
-      Boolean passed, 
+      boolean passed, 
       Instant submittedAt) {
     this.sessionId = sessionId;
     this.examCode = examCode;

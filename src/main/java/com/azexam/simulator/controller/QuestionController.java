@@ -3,28 +3,51 @@ package com.azexam.simulator.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.azexam.simulator.dto.QuestionResponse;
-import com.azexam.simulator.service.QuestionService;
+import com.azexam.simulator.dto.FlagRequest;
+import com.azexam.simulator.service.ExamQuestionStateService;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/questions")
+@RequestMapping("/api/exam-state")
 public class QuestionController {
   
-  private final QuestionService questionService;
+  private final ExamQuestionStateService examQuestionStateService;
 
-  public QuestionController(QuestionService questionService) {
-    this.questionService = questionService;
+  public QuestionController(ExamQuestionStateService examQuestionStateService) {
+    this.examQuestionStateService = examQuestionStateService;
   }
 
-  @GetMapping("/session/{sessionId}")
-  public ResponseEntity<List<QuestionResponse>> getQuestions(@PathVariable UUID sessionId) {
-      return ResponseEntity.ok(questionService.getQuestions(sessionId));
+  @PostMapping("/{sessionId}/{questionId}/flag")
+  public ResponseEntity<?> flagQuestion(
+      @PathVariable UUID sessionId,
+      @PathVariable String questionId,
+      @RequestBody FlagRequest request) {
+
+    examQuestionStateService.flag(
+      sessionId,
+      questionId,
+      request.isFlagged()
+    );
+
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/{questionId}/visit")
+  public ResponseEntity<?> markVisited(
+      @PathVariable String questionId,
+      @RequestBody FlagRequest request) {
+
+    examQuestionStateService.markVisited(
+      request.getSessionId(),
+      questionId
+    );
+
+    return ResponseEntity.ok().build();
   }
 }

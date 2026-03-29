@@ -69,29 +69,33 @@ public class ExamResultService {
       throw new BadRequestException("Exam time expired");
     }
     
-    var questions = questionLoader.loadExam(session.getExamCode()).getQuestions();
+    var exam = questionLoader.loadExam(session.getExamCode());
 
     var answers = answerRepository.findBySessionId(sessionId);
     
     Map<String, String> answerMap = answers.stream()
       .collect(Collectors.toMap(
         ExamAnswer::getQuestionId,
-        ExamAnswer::getAnswer
+        ExamAnswer::getAnswer,
+        (a, b) -> b
       ));
 
     int correct = 0;
+    int total = 0;
 
-    for (var q: questions) {
-      
-      if (answerMap.containsKey(q.getId())) {
+    for (var section : exam.getSections()) {
+      for (var q : section.getQuestions()) {
 
-        if (scoringEngine.isCorrect(q, answerMap.get(q.getId()))) {
+        total++;
+
+        String userAnswerJson = answerMap.get(q.getId());
+
+        if (userAnswerJson != null &&
+            scoringEngine.isCorrect(q, userAnswerJson)) {
           correct++;
         }
       }
     }
-
-    int total = questions.size();
 
     if (total == 0) {
       throw new BadRequestException("Exam has no questions");

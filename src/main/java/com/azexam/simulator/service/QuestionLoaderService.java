@@ -15,7 +15,8 @@ public class QuestionLoaderService {
 
   public QuestionLoaderService(BlobService blobService) {
     this.blobService = blobService;
-    this.yamlMapper = new ObjectMapper(new YAMLFactory());
+    this.yamlMapper = new ObjectMapper(new YAMLFactory())
+      .findAndRegisterModules();
   }
 
   public ExamYaml loadExam(String examCode) {
@@ -31,18 +32,25 @@ public class QuestionLoaderService {
 
       return exam;
     } catch (Exception e) {
-      throw new RuntimeException("Failed to load exam: " + examCode + " > " + e.getMessage());
+      throw new RuntimeException("Failed to load exam: " + examCode, e);
     }
   }
 
   private void validateExam(ExamYaml exam) {
 
-    if (exam.getQuestions() == null || exam.getQuestions().isEmpty()) {
-      throw new RuntimeException("Exam has no questions");
+    if (exam.getSections() == null || exam.getSections().isEmpty()) {
+      throw new RuntimeException("Exam has no sections");
     }
 
-    for (QuestionYaml question : exam.getQuestions()) {
-      validateQuestion(question);
+    for (var section : exam.getSections()) {
+
+      if (section.getQuestions() == null || section.getQuestions().isEmpty()) {
+        throw new RuntimeException("Section has no questions: " + section.getId());
+      }
+
+      for (QuestionYaml question : section.getQuestions()) {
+        validateQuestion(question);
+      }
     }
   }
 
@@ -52,7 +60,7 @@ public class QuestionLoaderService {
       throw new RuntimeException("Question type is missing: " + question.getId());
     }
 
-    switch (question.getType()) {
+    switch (question.getType().toUpperCase()) {
       
       case "SINGLE_CHOICE":
         if (question.getOptions() == null || question.getCorrectAnswer() == null) {
