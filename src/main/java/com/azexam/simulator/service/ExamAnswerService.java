@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.dto.SaveAnswerRequest;
@@ -43,60 +44,60 @@ public class ExamAnswerService {
    */
   public void saveAnswer(SaveAnswerRequest request) {
     
+    // Validation
+    if (request.getSessionId() == null || request.getQuestionId() == null) {
+      throw new BadRequestException("Session ID and Question ID are required");
+    }
+
     var session = sessionService.getSession(request.getSessionId());
 
     if ("SUBMITTED".equals(session.getStatus())) {
       throw new BadRequestException("Cannot save answer for submitted exam");
     }
+
+    String jsonAnswer = toJson(request.getAnswer());
     
-    // Check if answer already exists for this question in the session
-    var existing = examAnswerRepository.findBySessionIdAndQuestionId(
-      request.getSessionId(), 
-      request.getQuestionId()
-    );
+    try {
+      var existing = examAnswerRepository.findBySessionIdAndQuestionId(
+        request.getSessionId(), 
+        request.getQuestionId()
+      );
 
-    ExamAnswer answer;
+      ExamAnswer answer;
 
-    if (existing.isPresent()) {
-      answer = existing.get();
-      answer.setAnswer(toJson(request.getAnswer()));
-      answer.setUpdatedAt(Instant.now());
-      answer.setUpdatedBy("system");
-    } else {
-      answer = new ExamAnswer();
-      answer.setId(UUID.randomUUID());
-      answer.setSessionId(request.getSessionId());
-      answer.setQuestionId(request.getQuestionId());
-      answer.setAnswer(toJson(request.getAnswer()));
-      answer.setCreatedAt(Instant.now());
-      answer.setUpdatedAt(Instant.now());
-      answer.setUpdatedBy("system");
-    }
-
-    if (request.getSessionId() == null || request.getQuestionId() == null) {
-      throw new BadRequestException("Session ID and Question ID are required");
-    }
-
-    examAnswerRepository.save(answer);
-
-    examQuestionStateRepository.findBySessionIdAndQuestionId(
-      request.getSessionId(), request.getQuestionId()
-    ).ifPresentOrElse(
-      state -> {
-        state.setVisited(true);
-        examQuestionStateRepository.save(state);
-      },
-      () -> {
-        ExamQuestionState state = new ExamQuestionState();
-        state.setId(UUID.randomUUID());
-        state.setSessionId(request.getSessionId());
-        state.setQuestionId(request.getQuestionId());
-        state.setVisited(true);
-        state.setFlagged(false);
-
-        examQuestionStateRepository.save(state);
+      if (existing.isPresent()) {
+        answer = existing.get();
+        answer.setAnswer(jsonAnswer);
+        answer.setUpdatedAt(Instant.now());
+        answer.setUpdatedBy("system");
+      } else {
+        answer = new ExamAnswer();
+        answer.setId(UUID.randomUUID());
+        answer.setSessionId(request.getSessionId());
+        answer.setQuestionId(request.getQuestionId());
+        answer.setAnswer(jsonAnswer);
+        answer.setCreatedAt(Instant.now());
+        answer.setUpdatedAt(Instant.now());
+        answer.setUpdatedBy("system");
       }
-    );
+
+      examAnswerRepository.save(answer);
+    } catch (DataIntegrityViolationException e) {
+      
+      // Handle race condition
+      var retryAnswer = examAnswerRepository.findBySessionIdAndQuestionId(
+        request.getSessionId(), 
+        request.getQuestionId()
+      ).orElseThrow(() -> new RuntimeException("Retry failed after duplicate"));
+
+      retryAnswer.setAnswer(jsonAnswer);
+      retryAnswer.setUpdatedAt(Instant.now());
+
+      examAnswerRepository.save(retryAnswer);
+    }
+
+    // Update question state
+    upsertQuestionState(request.getSessionId(), request.getQuestionId());
   }
 
   /**
@@ -115,5 +116,36 @@ public class ExamAnswerService {
     } catch (Exception e) {
       throw new RuntimeException("Failed to serialize answer to JSON", e);
     }
+  }
+
+  private void upsertQuestionState(UUID sessionId, String questionId) {
+    try {
+      var existing = examQuestionStateRepository
+        .findBySessionIdAndQuestionId(sessionId, questionId);
+
+      if (existing.isPresent()) {
+        var state = existing.get();
+        state.setVisited(true);
+
+        examQuestionStateRepository.save(state);
+      } else {
+        var state = new ExamQuestionState();
+        state.setId(UUID.randomUUID());
+        state.setSessionId(sessionId);
+        state.setQuestionId(questionId);
+        state.setVisited(true);
+        state.setFlagged(false);
+
+        examQuestionStateRepository.save(state);
+      }
+    } catch (DataIntegrityViolationException e) {
+      var retry = examQuestionStateRepository
+        .findBySessionIdAndQuestionId(sessionId, questionId)
+        .orElseThrow(() -> new RuntimeException("Retry failed after duplicate"));
+      
+      retry.setVisited(true);
+      examQuestionStateRepository.save(retry);
+    }
+
   }
 }

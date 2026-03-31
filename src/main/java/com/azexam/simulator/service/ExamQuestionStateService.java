@@ -24,20 +24,25 @@ public class ExamQuestionStateService {
    *
    * @param sessionId session id
    * @param questionId question id
-   * @param flagged desired flagged state
    */
-  public void flag(UUID sessionId, String questionId, boolean flagged) {
+  public void flag(UUID sessionId, String questionId) {
 
-    var state = examQuestionStateRepository.findBySessionIdAndQuestionId(sessionId, questionId)
-      .orElseGet(() -> {
-        var newState = new ExamQuestionState();
-        newState.setId(UUID.randomUUID());
-        newState.setSessionId(sessionId);
-        newState.setQuestionId(questionId);
-        return newState;
-      });
+    var existing = examQuestionStateRepository
+      .findBySessionIdAndQuestionId(sessionId, questionId);
+
+    ExamQuestionState state;
     
-    state.setFlagged(flagged);
+    if (existing.isPresent()) {
+      state = existing.get();
+    } else {
+      state = new ExamQuestionState();
+      state.setId(UUID.randomUUID());
+      state.setSessionId(sessionId);
+      state.setQuestionId(questionId);
+    }
+    
+    boolean newValue = !Boolean.TRUE.equals(state.isFlagged());
+    state.setFlagged(newValue);
     state.setVisited(true);
 
     examQuestionStateRepository.save(state);
@@ -51,18 +56,30 @@ public class ExamQuestionStateService {
    */
   public void markVisited(UUID sessionId, String questionId) {
 
-    var state = examQuestionStateRepository
-      .findBySessionIdAndQuestionId(sessionId, questionId)
-      .orElseGet(() -> {
-        var newState = new ExamQuestionState();
-        newState.setId(UUID.randomUUID());
-        newState.setSessionId(sessionId);
-        newState.setQuestionId(questionId);
-        return newState;
-      });
-    
-    state.setVisited(true);
+    try {
+      var state = examQuestionStateRepository
+        .findBySessionIdAndQuestionId(sessionId, questionId)
+        .orElseGet(() -> {
+          var newState = new ExamQuestionState();
+          newState.setId(UUID.randomUUID());
+          newState.setSessionId(sessionId);
+          newState.setQuestionId(questionId);
+          return newState;
+        });
+      
+      state.setVisited(true);
 
-    examQuestionStateRepository.save(state);
+      examQuestionStateRepository.save(state);
+    } catch (Exception e) {
+      // Handle duplicate insert due to race condition
+      // safe fallback: fetch existing and update
+
+      var existing = examQuestionStateRepository
+        .findBySessionIdAndQuestionId(sessionId, questionId)
+        .orElseThrow();
+
+      existing.setVisited(true);
+      examQuestionStateRepository.save(existing);
+    }
   }
 }

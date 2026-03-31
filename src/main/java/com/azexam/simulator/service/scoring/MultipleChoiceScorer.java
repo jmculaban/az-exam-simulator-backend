@@ -1,6 +1,5 @@
 package com.azexam.simulator.service.scoring;
 
-import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Component;

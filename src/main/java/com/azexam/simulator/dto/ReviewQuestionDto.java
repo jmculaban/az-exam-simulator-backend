@@ -1,5 +1,8 @@
 package com.azexam.simulator.dto;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,7 +14,8 @@ public class ReviewQuestionDto {
   private String text;
   private String type;
 
-  private Object options;
+  private List<String> options;
+  private Map<String, String> optionMap;
 
   private Object userAnswer;
   private Object correctAnswer;

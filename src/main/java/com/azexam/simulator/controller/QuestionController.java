@@ -43,16 +43,14 @@ public class QuestionController {
   @PostMapping("/{sessionId}/{questionId}/flag")
   public ResponseEntity<?> flagQuestion(
       @PathVariable UUID sessionId,
-      @PathVariable String questionId,
-      @Valid @RequestBody FlagRequest request) {
+      @PathVariable String questionId) {
 
-    log.info("Flagging question: sessionId={}, questionId={}, flagged={}", 
-      sessionId, questionId, request.isFlagged());
+    log.info("Flagging question: sessionId={}, questionId={}", 
+      sessionId, questionId);
     
     examQuestionStateService.flag(
       sessionId,
-      questionId,
-      request.isFlagged()
+      questionId
     );
 
     return ResponseEntity.ok().build();

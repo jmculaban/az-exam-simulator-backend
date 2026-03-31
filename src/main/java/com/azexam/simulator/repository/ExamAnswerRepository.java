@@ -11,4 +11,5 @@ import com.azexam.simulator.model.ExamAnswer;
 public interface ExamAnswerRepository extends JpaRepository<ExamAnswer, UUID> {
   List<ExamAnswer> findBySessionId(UUID sessionId);
   Optional<ExamAnswer> findBySessionIdAndQuestionId(UUID sessionId, String questionId);
+  Optional<ExamAnswer> findTopBySessionIdAndQuestionIdOrderByUpdatedAtDesc(UUID sessionId, String questionId);
 }

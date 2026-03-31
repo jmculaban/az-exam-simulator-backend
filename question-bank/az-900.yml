@@ -41,6 +41,11 @@ sections:
       - id: q4
         type: MATCHING
         text: Match service to category
+        options:
+          - compute
+          - storage
+          - database
+          - networking
         optionMap:
           vm: Virtual Machine
           blob: Blob Storage

@@ -5,10 +5,16 @@ import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "exam_question_state")
+@Table(
+  name = "exam_question_state",
+  uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"sessionId", "questionId"})
+  }
+)
 @Data
 public class ExamQuestionState {
   

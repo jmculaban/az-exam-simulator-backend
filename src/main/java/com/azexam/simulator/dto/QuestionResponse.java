@@ -1,11 +1,12 @@
 package com.azexam.simulator.dto;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class QuestionResponse {
   
@@ -13,7 +14,8 @@ public class QuestionResponse {
   private String text;
   private String type;
 
-  private Object options;
+  private List<String> options;
+  private Map<String, String> optionMap;
   private Object answer;
 
   private boolean isAnswered;

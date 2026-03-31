@@ -87,14 +87,16 @@ public class ExamQueryService {
     Map<String, Object> answerMap = answers.stream()
       .collect(Collectors.toMap(
         a -> a.getQuestionId(),
-        a -> extractAnswer(a.getAnswer())
+        a -> extractAnswer(a.getAnswer()),
+        (existing, replacement) -> existing
       ));
 
     // 5. Process each sections
     Map<String, ExamQuestionState> stateMap = states.stream()
       .collect(Collectors.toMap(
         s -> s.getQuestionId(),
-        s -> s
+        s -> s,
+        (existing, duplicate) -> existing
       ));
 
     var sections = exam.getSections().stream().map(section -> {
@@ -107,7 +109,8 @@ public class ExamQueryService {
           q.getId(),
           q.getText(),
           q.getType(),
-          resolveOptions(q),
+          q.getOptions(),
+          q.getOptionMap(),
           answerMap.get(q.getId()),
           answerMap.containsKey(q.getId()),
           state != null && Boolean.TRUE.equals(state.isFlagged()),
@@ -263,7 +266,8 @@ public class ExamQueryService {
           q.getId(),
           q.getText(),
           q.getType(),
-          resolveOptions(q),
+          q.getOptions(),
+          q.getOptionMap(),
           userAnswer,
           correctAnswer,
           isCorrect
@@ -293,12 +297,6 @@ public class ExamQueryService {
     } catch (Exception e) {
       throw new RuntimeException("Failed to parse answer JSON", e);
     }
-  }
-
-  private Object resolveOptions(QuestionYaml question) {
-    if (question.getOptions() != null) return question.getOptions();
-    if (question.getOptionMap() != null) return question.getOptionMap();
-    return null;
   }
 
   private NavigationDto buildNavigation(List<SectionResponseDto> sections) {
