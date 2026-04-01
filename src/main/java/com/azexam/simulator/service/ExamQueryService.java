@@ -331,6 +331,9 @@ public class ExamQueryService {
 
     return new ReviewExamResponse(
       sessionId,
+      session.getUser() == null ? null : session.getUser().getExternalUserId(),
+      session.getStartTime(),
+      session.getEndTime(),
       result.getScore(),
       result.getCorrect(),
       result.getTotal(),
