@@ -1,8 +1,12 @@
 package com.azexam.simulator.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -168,6 +172,7 @@ public class QuestionLoaderService {
       .map(section -> {
         var filteredQuestions = section.getQuestions().stream()
           .filter(question -> selected.contains(question.getId()))
+          .map(this::copyQuestion)
           .toList();
 
         if (filteredQuestions.isEmpty()) {
@@ -188,18 +193,83 @@ public class QuestionLoaderService {
     filteredExam.setDescription(exam.getDescription());
     filteredExam.setDurationMinutes(exam.getDurationMinutes());
     filteredExam.setRandomQuestionCount(exam.getRandomQuestionCount());
+    filteredExam.setSectionWeights(exam.getSectionWeights());
     filteredExam.setSections(filteredSections);
 
     return filteredExam;
   }
 
   /**
+   * Returns a session-safe copy of the exam with stable randomized option order.
+   */
+  public ExamYaml prepareExamForSession(ExamYaml exam, List<String> selectedIds, String sessionSeed) {
+    ExamYaml sessionExam = (selectedIds == null || selectedIds.isEmpty())
+      ? copyExam(exam)
+      : filterExamByQuestionIds(exam, selectedIds);
+
+    for (SectionYaml section : sessionExam.getSections()) {
+      for (QuestionYaml question : section.getQuestions()) {
+        shuffleQuestionOptions(question, sessionSeed);
+      }
+    }
+
+    return sessionExam;
+  }
+
+  private ExamYaml copyExam(ExamYaml exam) {
+    var copiedSections = exam.getSections().stream()
+      .map(section -> {
+        var copy = new SectionYaml();
+        copy.setId(section.getId());
+        copy.setTitle(section.getTitle());
+        copy.setQuestions(section.getQuestions().stream().map(this::copyQuestion).toList());
+        return copy;
+      })
+      .toList();
+
+    var copy = new ExamYaml();
+    copy.setExamCode(exam.getExamCode());
+    copy.setDescription(exam.getDescription());
+    copy.setDurationMinutes(exam.getDurationMinutes());
+    copy.setRandomQuestionCount(exam.getRandomQuestionCount());
+    copy.setSectionWeights(exam.getSectionWeights());
+    copy.setSections(copiedSections);
+    return copy;
+  }
+
+  private QuestionYaml copyQuestion(QuestionYaml question) {
+    var copy = new QuestionYaml();
+    copy.setId(question.getId());
+    copy.setType(question.getType());
+    copy.setText(question.getText());
+    copy.setOptions(question.getOptions() == null ? null : new ArrayList<>(question.getOptions()));
+    copy.setOptionMap(question.getOptionMap() == null ? null : new LinkedHashMap<>(question.getOptionMap()));
+    copy.setCorrectAnswer(question.getCorrectAnswer());
+    copy.setCorrectAnswers(question.getCorrectAnswers() == null ? null : new ArrayList<>(question.getCorrectAnswers()));
+    copy.setCorrectOrder(question.getCorrectOrder() == null ? null : new ArrayList<>(question.getCorrectOrder()));
+    copy.setCorrectMap(question.getCorrectMap() == null ? null : new LinkedHashMap<>(question.getCorrectMap()));
+    return copy;
+  }
+
+  private void shuffleQuestionOptions(QuestionYaml question, String sessionSeed) {
+    if (question.getOptions() == null || question.getOptions().size() < 2) {
+      return;
+    }
+
+    var shuffledOptions = new ArrayList<>(question.getOptions());
+    long seed = (sessionSeed + ":" + question.getId()).hashCode();
+    Collections.shuffle(shuffledOptions, new Random(seed));
+    question.setOptions(shuffledOptions);
+  }
+
+  /**
    * Randomly selects questions by section with percentage-based weights.
    * Distributes the total question count across sections based on their weights.
+   * If a section lacks enough questions, intelligently redistributes from other sections.
    *
    * @param exam the exam with section weights
    * @param totalCount total number of questions to select (e.g., 50)
-   * @return list of selected question ids distributed by weight
+   * @return list of selected question ids distributed by weight (with intelligent fallback)
    */
   public List<String> selectRandomQuestionIdsByWeight(ExamYaml exam, int totalCount) {
     
@@ -209,41 +279,71 @@ public class QuestionLoaderService {
     }
 
     var selectedIds = new ArrayList<String>();
-    var sectionWeightMap = new java.util.HashMap<String, Integer>();
     
-    // Build map of section weights
-    for (var weight : exam.getSectionWeights()) {
-      sectionWeightMap.put(weight.getSectionId(), weight.getPercentageWeight());
-    }
-
     // Map sections by id for quick lookup
     var sectionMap = exam.getSections().stream()
       .collect(java.util.stream.Collectors.toMap(SectionYaml::getId, s -> s));
 
-    // Distribute questions across sections based on weights
+    // Step 1: Calculate target count per section and track allocation
+    var allocationMap = new java.util.LinkedHashMap<String, Integer>();
+    var availableMap = new java.util.HashMap<String, Integer>();
+    
     for (var weight : exam.getSectionWeights()) {
       String sectionId = weight.getSectionId();
       int percentageWeight = weight.getPercentageWeight();
+      int targetCount = Math.round(totalCount * percentageWeight / 100f);
       
-      // Calculate questions needed for this section
-      int questionsForSection = Math.round(totalCount * percentageWeight / 100f);
-      
-      // Get all question ids from this section
       var section = sectionMap.get(sectionId);
       if (section == null) {
         throw new RuntimeException("Section not found: " + sectionId);
       }
+      
+      int availableCount = section.getQuestions().size();
+      allocationMap.put(sectionId, targetCount);
+      availableMap.put(sectionId, availableCount);
+    }
 
+    // Step 2: Adjust allocations for sections with insufficient questions
+    var adjustedAllocationMap = new java.util.LinkedHashMap<>(allocationMap);
+    var deficit = 0;
+
+    for (var entry : allocationMap.entrySet()) {
+      String sectionId = entry.getKey();
+      int targetCount = entry.getValue();
+      int availableCount = availableMap.get(sectionId);
+
+      if (availableCount < targetCount) {
+        // This section can't provide enough, so take all it has
+        deficit += targetCount - availableCount;
+        adjustedAllocationMap.put(sectionId, availableCount);
+      }
+    }
+
+    // Step 3: Redistribute deficit from sections that have surplus
+    if (deficit > 0) {
+      for (var entry : adjustedAllocationMap.entrySet()) {
+        String sectionId = entry.getKey();
+        int currentAllocation = entry.getValue();
+        int availableCount = availableMap.get(sectionId);
+        int surplus = availableCount - currentAllocation;
+
+        if (surplus > 0 && deficit > 0) {
+          int redistribute = Math.min(surplus, deficit);
+          adjustedAllocationMap.put(sectionId, currentAllocation + redistribute);
+          deficit -= redistribute;
+        }
+      }
+    }
+
+    // Step 4: Select questions from each section based on adjusted allocation
+    for (var entry : adjustedAllocationMap.entrySet()) {
+      String sectionId = entry.getKey();
+      int questionsForSection = entry.getValue();
+
+      var section = sectionMap.get(sectionId);
       var sectionQuestionIds = section.getQuestions().stream()
         .map(QuestionYaml::getId)
         .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
-
-      if (questionsForSection > sectionQuestionIds.size()) {
-        throw new RuntimeException(
-          "Section " + sectionId + " has only " + sectionQuestionIds.size() + 
-          " questions but weight requires " + questionsForSection
-        );
-      }
 
       // Fisher-Yates shuffle and select
       for (int i = sectionQuestionIds.size() - 1; i > 0; i--) {

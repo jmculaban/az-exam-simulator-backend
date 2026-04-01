@@ -114,10 +114,6 @@ public class ExamSessionService {
     var exam = questionLoader.loadExam(session.getExamCode());
     var selectedIds = session.getSelectedQuestionIds();
 
-    if (selectedIds == null || selectedIds.isEmpty()) {
-      return exam;
-    }
-
-    return questionLoader.filterExamByQuestionIds(exam, selectedIds);
+    return questionLoader.prepareExamForSession(exam, selectedIds, session.getId().toString());
   }
 }

@@ -45,6 +45,7 @@ public class ExamQueryService {
   private final ExamSessionRepository examSessionRepository;
   private final ExamQuestionStateRepository examQuestionStateRepository;
   private final ExamResultRepository examResultRepository;
+  private final UserService userService;
   private final ObjectMapper objectMapper;
   private final ScoringEngine scoringEngine;
 
@@ -54,6 +55,7 @@ public class ExamQueryService {
       ExamSessionRepository examSessionRepository,
       ExamQuestionStateRepository examQuestionStateRepository,
       ExamResultRepository examResultRepository,
+      UserService userService,
       ObjectMapper objectMapper,
       ScoringEngine scoringEngine) {
     this.examSessionService = examSessionService;
@@ -61,6 +63,7 @@ public class ExamQueryService {
     this.examSessionRepository = examSessionRepository;
     this.examQuestionStateRepository = examQuestionStateRepository;
     this.examResultRepository = examResultRepository;
+    this.userService = userService;
     this.objectMapper = objectMapper;
     this.scoringEngine = scoringEngine;
   }
@@ -207,16 +210,16 @@ public class ExamQueryService {
    * @return page of history entries
    */
   public Page<UserExamHistoryResponse> getUserExamHistory(
-      UUID userId,
+      String userId,
       Boolean passed,
       String examCode,
       int page,
       int size) {
-    
+    UUID internalUserId = userService.toInternalUserId(userId);
     var pageable = PageRequest.of(page, size);
 
     return examSessionRepository.findUserExamHistory(
-      userId,
+      internalUserId,
       passed,
       examCode,
       pageable

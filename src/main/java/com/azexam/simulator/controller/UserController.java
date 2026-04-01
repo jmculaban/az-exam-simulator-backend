@@ -1,7 +1,5 @@
 package com.azexam.simulator.controller;
 
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +57,7 @@ public class UserController {
    */
   @GetMapping("/{userId}/exam-history")
   public ResponseEntity<?> getExamHistory(
-      @PathVariable UUID userId,
+      @PathVariable String userId,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(required = false) Boolean passed,
