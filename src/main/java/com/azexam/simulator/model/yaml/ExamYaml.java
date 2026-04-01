@@ -12,5 +12,6 @@ public class ExamYaml {
   private String description;
   private Integer durationMinutes;
   private Integer randomQuestionCount;
+  private List<SectionWeight> sectionWeights;
   private List<SectionYaml> sections;
 }

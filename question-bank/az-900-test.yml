@@ -1,6 +1,11 @@
 examCode: AZ-900-TEST
 description: Microsoft Azure Fundamentals
 durationMinutes: 2
+randomQuestionCount: 4
+
+sectionWeights:
+  - sectionId: s1
+    percentageWeight: 100
 
 sections:
   - id: s1

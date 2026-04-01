@@ -11,8 +11,6 @@ import com.azexam.simulator.model.User;
 import com.azexam.simulator.model.yaml.ExamYaml;
 import com.azexam.simulator.repository.ExamSessionRepository;
 import com.azexam.simulator.repository.UserRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Manages creation and lifecycle updates of exam sessions.
@@ -24,20 +22,17 @@ public class ExamSessionService {
   private final UserRepository userRepository;
   private final QuestionLoaderService questionLoader;
   private final UserService userService;
-  private final ObjectMapper objectMapper;
   
   public ExamSessionService(
     ExamSessionRepository sessionRepository,
     UserRepository userRepository,
     QuestionLoaderService questionLoader,
-    UserService userService,
-    ObjectMapper objectMapper
+    UserService userService
   ) {
     this.sessionRepository = sessionRepository;
     this.userRepository = userRepository;
     this.questionLoader = questionLoader;
     this.userService = userService;
-    this.objectMapper = objectMapper;
   }
 
   /**
@@ -64,7 +59,7 @@ public class ExamSessionService {
       );
     }
 
-    var selectedQuestionIds = questionLoader.selectRandomQuestionIds(exam, randomQuestionCount);
+    var selectedQuestionIds = questionLoader.selectRandomQuestionIdsByWeight(exam, randomQuestionCount);
     
     ExamSession session = new ExamSession();
     session.setId(UUID.randomUUID());
@@ -75,7 +70,7 @@ public class ExamSessionService {
 
     // Set the duration for the exam session
     session.setDurationMinutes(exam.getDurationMinutes());
-    session.setSelectedQuestionIds(toJson(selectedQuestionIds));
+    session.setSelectedQuestionIds(selectedQuestionIds);
 
     return sessionRepository.save(session);
   }
@@ -117,32 +112,12 @@ public class ExamSessionService {
    */
   public ExamYaml loadExamForSession(ExamSession session) {
     var exam = questionLoader.loadExam(session.getExamCode());
-    var selectedIds = parseSelectedQuestionIds(session.getSelectedQuestionIds());
+    var selectedIds = session.getSelectedQuestionIds();
 
-    if (selectedIds.isEmpty()) {
+    if (selectedIds == null || selectedIds.isEmpty()) {
       return exam;
     }
 
     return questionLoader.filterExamByQuestionIds(exam, selectedIds);
-  }
-
-  private String toJson(List<String> selectedQuestionIds) {
-    try {
-      return objectMapper.writeValueAsString(selectedQuestionIds);
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to serialize selected questions", e);
-    }
-  }
-
-  private List<String> parseSelectedQuestionIds(String selectedQuestionIdsJson) {
-    if (selectedQuestionIdsJson == null || selectedQuestionIdsJson.isBlank()) {
-      return List.of();
-    }
-
-    try {
-      return objectMapper.readValue(selectedQuestionIdsJson, new TypeReference<List<String>>() {});
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to parse selected question ids", e);
-    }
   }
 }

@@ -3,872 +3,782 @@ description: Microsoft Azure Fundamentals
 durationMinutes: 60
 randomQuestionCount: 50
 
+# Section weights - percentages of total random questions selected
+# The system will randomly select questions from each section based on these weights
+# Example: 30% of 50 questions = ~15 questions from this section
+sectionWeights:
+  - sectionId: s1
+    percentageWeight: 30   # 15 questions from Architecture & Services
+  - sectionId: s2
+    percentageWeight: 25   # 12-13 questions from Identity, Access & Security
+  - sectionId: s3
+    percentageWeight: 25   # 12-13 questions from Management & Governance
+  - sectionId: s4
+    percentageWeight: 20   # 10 questions from Features & Tools
+
 sections:
   - id: s1
-    title: Describe Cloud Concepts
+    title: Describe Azure architecture and services
     questions:
 
       - id: q1
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 1)
+        text: What is the primary benefit of using Azure App Service?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Fully managed web hosting with automatic scaling
+          - Direct access to physical servers
+          - Manual infrastructure management only
+        correctAnswer: Fully managed web hosting with automatic scaling
 
       - id: q2
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 2)
+        text: Which compute services are available in Azure?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Virtual Machines and Container Instances
+          - App Service and Functions
+          - Firewall Management
+          - User Directory only
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Virtual Machines and Container Instances
+          - App Service and Functions
 
       - id: q3
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 3)
+        text: Order these services from most to least management responsibility.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Container Instances
+          - App Service
+          - Virtual Machines
+          - Functions
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Virtual Machines
+          - Container Instances
+          - App Service
+          - Functions
 
       - id: q4
         type: MATCHING
-        text: Match each Azure service to its category. (Question 4)
+        text: Match Azure services to their primary use cases.
         options:
-          - compute
-          - storage
-          - database
+          - web apps
+          - unstructured data
+          - relational data
           - networking
         optionMap:
-          vm: Azure Virtual Machines
+          appservice: Azure App Service
           blob: Azure Blob Storage
           sql: Azure SQL Database
           vnet: Azure Virtual Network
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
+          appservice: web apps
+          blob: unstructured data
+          sql: relational data
           vnet: networking
 
       - id: q5
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 5)
+        text: Which Azure service provides serverless compute?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Azure Functions
+          - Azure Virtual Machines
+          - Azure SQL Database
+        correctAnswer: Azure Functions
 
       - id: q6
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 6)
+        text: What are benefits of containers in Azure?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Lightweight and portable
+          - Fast deployment
+          - Requires heavy OS overhead
+          - Manual scaling needed
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Lightweight and portable
+          - Fast deployment
 
       - id: q7
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 7)
+        text: Order deployment models by user responsibility level.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Software as a Service
+          - Infrastructure as a Service
+          - Platform as a Service
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Infrastructure as a Service
+          - Platform as a Service
+          - Software as a Service
 
       - id: q8
         type: MATCHING
-        text: Match each Azure service to its category. (Question 8)
+        text: Match storage services to data types.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - documents
+          - files
+          - tables
+          - queues
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          cosmos: Cosmos DB
+          fileshare: Azure Files
+          storage: Table Storage
+          servicebus: Service Bus
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          cosmos: documents
+          fileshare: files
+          storage: tables
+          servicebus: queues
 
       - id: q9
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 9)
+        text: What is Azure Kubernetes Service (AKS) used for?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Managed Kubernetes container orchestration
+          - Static website hosting
+          - Email services
+        correctAnswer: Managed Kubernetes container orchestration
 
       - id: q10
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 10)
+        text: Which of these are key features of cloud computing?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - On-demand scalability
+          - Pay-as-you-go pricing
+          - Geographic redundancy
+          - Hardware ownership required
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - On-demand scalability
+          - Pay-as-you-go pricing
 
       - id: q11
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 11)
+        text: Order these by increasing level of abstraction.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Managed Services
+          - Platform as a Service
+          - Infrastructure as a Service
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Infrastructure as a Service
+          - Platform as a Service
+          - Managed Services
 
       - id: q12
         type: MATCHING
-        text: Match each Azure service to its category. (Question 12)
+        text: Match Azure data services to their characteristics.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - sql
+          - nosql
+          - analytics
+          - archive
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          sqldb: Azure SQL Database
+          cosmos: Cosmos DB
+          synapse: Synapse Analytics
+          archive: Blob Archive
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          sqldb: sql
+          cosmos: nosql
+          synapse: analytics
+          archive: archive
 
       - id: q13
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 13)
+        text: Which service is best for real-time IoT data processing?
         options:
+          - Azure Event Hubs
           - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Azure SQL Database
+        correctAnswer: Azure Event Hubs
 
       - id: q14
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 14)
+        text: What are characteristics of Azure's global infrastructure?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Multiple geographic regions
+          - High availability zones
+          - Limited to one region
+          - Single data center
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Multiple geographic regions
+          - High availability zones
 
       - id: q15
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 15)
+        text: Order these resource organization levels.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Resource
+          - Subscription
+          - Resource Group
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Resource
+          - Resource Group
+          - Subscription
 
       - id: q16
         type: MATCHING
-        text: Match each Azure service to its category. (Question 16)
+        text: Match compute patterns to solutions.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - batch processing
+          - realtime api
+          - event driven
+          - long running
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          batch: Batch Processing
+          api: App Service
+          functions: Functions
+          webjobs: WebJobs
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          batch: batch processing
+          api: realtime api
+          functions: event driven
+          webjobs: long running
 
       - id: q17
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 17)
+        text: What does Azure Resource Manager provide?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Template-based infrastructure deployment
+          - Physical server management only
+          - Email services
+        correctAnswer: Template-based infrastructure deployment
 
       - id: q18
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 18)
+        text: Which Azure services support hybrid scenarios?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Azure Arc
+          - Azure Stack
+          - Cloud-only services
+          - Dedicated hardware
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Azure Arc
+          - Azure Stack
 
       - id: q19
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 19)
+        text: Order Azure services by management overhead.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Databases
+          - Storage
+          - Virtual Machines
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Virtual Machines
+          - Storage
+          - Databases
 
       - id: q20
         type: MATCHING
-        text: Match each Azure service to its category. (Question 20)
+        text: Match services to their deployment models.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - iaas
+          - paas
+          - saas
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          vm: Virtual Machines
+          appservice: App Service
+          office365: Microsoft 365
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          vm: iaas
+          appservice: paas
+          office365: saas
+
+  - id: s2
+    title: Describe Azure identity, access, and security
+    questions:
 
       - id: q21
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 21)
+        text: What is Azure Active Directory (Entra ID)?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Cloud-based identity and access management service
+          - Physical security system
+          - Database service
+        correctAnswer: Cloud-based identity and access management service
 
       - id: q22
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 22)
+        text: Which are authentication best practices?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Use strong passwords
+          - Enable multi-factor authentication
+          - Share credentials securely
+          - Use passwordless solutions
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Use strong passwords
+          - Enable multi-factor authentication
+          - Use passwordless solutions
 
       - id: q23
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 23)
+        text: Order security layers from perimeter to data.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Data encryption
+          - Identity and access
+          - Network security
+          - Application security
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Network security
+          - Identity and access
+          - Application security
+          - Data encryption
 
       - id: q24
         type: MATCHING
-        text: Match each Azure service to its category. (Question 24)
+        text: Match security concepts to definitions.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - verifying identity
+          - granting permissions
+          - multiple methods
+          - data protection
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          auth: Authentication
+          authz: Authorization
+          mfa: Multi-Factor Authentication
+          encrypt: Encryption
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          auth: verifying identity
+          authz: granting permissions
+          mfa: multiple methods
+          encrypt: data protection
 
       - id: q25
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 25)
+        text: What does Azure Key Vault do?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Securely stores secrets and certificates
+          - Manages user accounts only
+          - Provides email services
+        correctAnswer: Securely stores secrets and certificates
 
       - id: q26
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 26)
+        text: Which access control methods does Azure support?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Role-Based Access Control (RBAC)
+          - Network Security Groups
+          - Attribute-Based Access Control
+          - Physical keys only
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Role-Based Access Control (RBAC)
+          - Network Security Groups
+          - Attribute-Based Access Control
 
       - id: q27
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 27)
+        text: Order passwordless authentication from least to most secure.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Windows Hello
+          - FIDO2 security keys
+          - Phone sign-in
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Phone sign-in
+          - Windows Hello
+          - FIDO2 security keys
 
       - id: q28
         type: MATCHING
-        text: Match each Azure service to its category. (Question 28)
+        text: Match Azure security services to functions.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - edge protection
+          - network filtering
+          - threat intelligence
+          - secret management
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          firewall: Azure Firewall
+          nsg: Network Security Groups
+          defender: Defender for Cloud
+          keyvault: Key Vault
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          firewall: edge protection
+          nsg: network filtering
+          defender: threat intelligence
+          keyvault: secret management
 
       - id: q29
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 29)
+        text: What is the principle of least privilege?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Grant minimum necessary permissions
+          - Grant all permissions by default
+          - Remove all restrictions
+        correctAnswer: Grant minimum necessary permissions
 
       - id: q30
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 30)
+        text: Which protect against DDoS attacks?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Azure DDoS Protection
+          - Firewall rules
+          - Rate limiting
+          - Proxy services
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Azure DDoS Protection
+          - Firewall rules
+          - Rate limiting
 
       - id: q31
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 31)
+        text: Order compliance certifications by scope.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Industry-specific standards
+          - Government standards
+          - Global standards
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Global standards
+          - Government standards
+          - Industry-specific standards
 
       - id: q32
         type: MATCHING
-        text: Match each Azure service to its category. (Question 32)
+        text: Match compliance frameworks to domains.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - healthcare
+          - payments
+          - data protection
+          - government
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          hipaa: HIPAA
+          pci: PCI DSS
+          gdpr: GDPR
+          fedramp: FedRAMP
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          hipaa: healthcare
+          pci: payments
+          gdpr: data protection
+          fedramp: government
 
       - id: q33
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 33)
+        text: What is conditional access?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Dynamic access policies based on conditions
+          - Static permission models
+          - Password reset only
+        correctAnswer: Dynamic access policies based on conditions
 
       - id: q34
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 34)
+        text: Which are encryption methods in Azure?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Encryption at rest
+          - Encryption in transit
+          - Transparent Data Encryption
+          - No encryption needed
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Encryption at rest
+          - Encryption in transit
+          - Transparent Data Encryption
 
       - id: q35
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 35)
+        text: Order security incident response steps.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Containment
+          - Detection
+          - Recovery
+          - Analysis
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Detection
+          - Analysis
+          - Containment
+          - Recovery
 
       - id: q36
         type: MATCHING
-        text: Match each Azure service to its category. (Question 36)
+        text: Match threat detection tools to capabilities.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - user behavior
+          - network traffic
+          - vulnerability scanning
+          - malware detection
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          analytics: Behavioral Analytics
+          monitor: Network Watcher
+          scanner: Vulnerability Scanner
+          defender: Defender for Endpoint
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          analytics: user behavior
+          monitor: network traffic
+          scanner: vulnerability scanning
+          defender: malware detection
+
+  - id: s3
+    title: Describe Azure management and governance
+    questions:
 
       - id: q37
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 37)
+        text: What is Azure Policy used for?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Enforce organizational standards
+          - Manage physical servers
+          - Create user accounts
+        correctAnswer: Enforce organizational standards
 
       - id: q38
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 38)
+        text: Which are benefits of Resource Groups?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Logical organization
+          - Access control
+          - Billing aggregation
+          - Automatic backup
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Logical organization
+          - Access control
+          - Billing aggregation
 
       - id: q39
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 39)
+        text: Order management scopes from smallest to largest.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Resource
+          - Management Group
+          - Subscription
+          - Resource Group
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Resource
+          - Resource Group
+          - Subscription
+          - Management Group
 
       - id: q40
         type: MATCHING
-        text: Match each Azure service to its category. (Question 40)
+        text: Match governance tools to purposes.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - cost monitoring
+          - standards
+          - organization
+          - recommendations
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          budgets: Azure Budgets
+          policy: Azure Policy
+          mg: Management Groups
+          advisor: Azure Advisor
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          budgets: cost monitoring
+          policy: standards
+          mg: organization
+          advisor: recommendations
 
       - id: q41
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 41)
+        text: What does Azure Blueprints enable?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Repeatable environment deployments
+          - Physical blueprints
+          - Email templates
+        correctAnswer: Repeatable environment deployments
 
       - id: q42
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 42)
+        text: Which help control Azure costs?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Reserved Instances
+          - Budgets and alerts
+          - Auto-shutdown rules
+          - Using only premium services
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Reserved Instances
+          - Budgets and alerts
+          - Auto-shutdown rules
 
       - id: q43
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 43)
+        text: Order cost optimization tactics by timing.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Reserved Instances
+          - Purchase Savings Plans
+          - Right-size resources
+          - Monitor usage
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Monitor usage
+          - Right-size resources
+          - Purchase Savings Plans
+          - Reserved Instances
 
       - id: q44
         type: MATCHING
-        text: Match each Azure service to its category. (Question 44)
+        text: Match monitoring services to functions.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - performance
+          - compliance
+          - optimization
+          - insights
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          monitor: Azure Monitor
+          defender: Defender for Cloud
+          advisor: Azure Advisor
+          insights: Application Insights
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          monitor: performance
+          defender: compliance
+          advisor: optimization
+          insights: insights
 
       - id: q45
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 45)
+        text: What defines a subscription scope?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Billing and resource container
+          - Resource type only
+          - User account
+        correctAnswer: Billing and resource container
 
       - id: q46
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 46)
+        text: Which reduce Azure operational costs?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Using VM auto-shutdown
+          - Reserved pricing
+          - Spot instances
+          - Continuous 24/7 operation
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Using VM auto-shutdown
+          - Reserved pricing
+          - Spot instances
 
       - id: q47
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 47)
+        text: Order governance phases.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Track and optimize
+          - Enforce policies
+          - Create baselines
+          - Define standards
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Define standards
+          - Create baselines
+          - Enforce policies
+          - Track and optimize
 
       - id: q48
         type: MATCHING
-        text: Match each Azure service to its category. (Question 48)
+        text: Match Azure information resources to content.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - technical docs
+          - best practices
+          - assessments
+          - training
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          docs: Microsoft Docs
+          wellarch: Well-Architected Framework
+          advisor: Azure Advisor
+          learn: Microsoft Learn
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          docs: technical docs
+          wellarch: best practices
+          advisor: assessments
+          learn: training
+
+  - id: s4
+    title: Describe features and tools for deploying resources
+    questions:
 
       - id: q49
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 49)
+        text: What is Azure DevOps for?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Plans, develops, and deploys solutions
+          - Email management only
+          - Database administration
+        correctAnswer: Plans, develops, and deploys solutions
 
       - id: q50
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 50)
+        text: Which are Infrastructure as Code tools?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Terraform
+          - ARM templates
+          - Bicep
+          - Portal clicking
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Terraform
+          - ARM templates
+          - Bicep
 
       - id: q51
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 51)
+        text: Order deployment automation levels.
         options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Scripts
+          - Infrastructure as Code
+          - CI/CD pipelines
+          - Manual portal
         correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
+          - Manual portal
+          - Scripts
+          - Infrastructure as Code
+          - CI/CD pipelines
 
       - id: q52
         type: MATCHING
-        text: Match each Azure service to its category. (Question 52)
+        text: Match tools to deployment methods.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - visual studio
+          - command line
+          - declarative
+          - continuous
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          portal: Azure Portal
+          cli: Azure CLI
+          template: ARM Templates
+          pipeline: Azure Pipelines
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
+          portal: visual studio
+          cli: command line
+          template: declarative
+          pipeline: continuous
 
       - id: q53
         type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 53)
+        text: What does Infrastructure as Code provide?
         options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
+          - Version-controlled repeatable deployments
+          - Manual configuration each time
+          - Scripting only
+        correctAnswer: Version-controlled repeatable deployments
 
       - id: q54
         type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 54)
+        text: Which are CI/CD best practices?
         options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
+          - Automated testing
+          - Version control
+          - Staged deployments
+          - Manual approvals only
         correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
+          - Automated testing
+          - Version control
+          - Staged deployments
 
       - id: q55
         type: ORDERING
-        text: Order the standard release flow from development to production. (Question 55)
+        text: Order DevOps pipeline stages.
         options:
-          - Plan
-          - Build
-          - Test
           - Deploy
+          - Test
+          - Build
+          - Release
         correctOrder:
-          - Plan
           - Build
           - Test
           - Deploy
+          - Release
 
       - id: q56
         type: MATCHING
-        text: Match each Azure service to its category. (Question 56)
+        text: Match DevOps services to capabilities.
         options:
-          - compute
-          - storage
-          - database
-          - networking
+          - code repository
+          - testing
+          - deployment
+          - monitoring
         optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
+          repos: Repos
+          pipelines: Pipelines
+          release: Release Management
+          monitor: Monitor
         correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
-
-      - id: q57
-        type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 57)
-        options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
-
-      - id: q58
-        type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 58)
-        options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
-        correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
-
-      - id: q59
-        type: ORDERING
-        text: Order the standard release flow from development to production. (Question 59)
-        options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
-        correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
-
-      - id: q60
-        type: MATCHING
-        text: Match each Azure service to its category. (Question 60)
-        options:
-          - compute
-          - storage
-          - database
-          - networking
-        optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
-        correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
-
-      - id: q61
-        type: SINGLE_CHOICE
-        text: Which Azure service best matches this scenario? (Question 61)
-        options:
-          - Azure Blob Storage
-          - Azure Virtual Network
-          - Azure Policy
-        correctAnswer: Azure Blob Storage
-
-      - id: q62
-        type: MULTIPLE_CHOICE
-        text: Select two core benefits of cloud computing. (Question 62)
-        options:
-          - Elastic scaling
-          - High capital expenditure
-          - Consumption-based pricing
-          - Fixed hardware lifecycle
-        correctAnswers:
-          - Elastic scaling
-          - Consumption-based pricing
-
-      - id: q63
-        type: ORDERING
-        text: Order the standard release flow from development to production. (Question 63)
-        options:
-          - Plan
-          - Build
-          - Test
-          - Deploy
-        correctOrder:
-          - Plan
-          - Build
-          - Test
-          - Deploy
-
-      - id: q64
-        type: MATCHING
-        text: Match each Azure service to its category. (Question 64)
-        options:
-          - compute
-          - storage
-          - database
-          - networking
-        optionMap:
-          vm: Azure Virtual Machines
-          blob: Azure Blob Storage
-          sql: Azure SQL Database
-          vnet: Azure Virtual Network
-        correctMap:
-          vm: compute
-          blob: storage
-          sql: database
-          vnet: networking
-
+          repos: code repository
+          pipelines: testing
+          release: deployment
+          monitor: monitoring

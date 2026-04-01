@@ -64,6 +64,20 @@ public class QuestionLoaderService {
       throw new RuntimeException("Exam has no sections");
     }
 
+    // Validate section weights if defined
+    if (exam.getSectionWeights() != null && !exam.getSectionWeights().isEmpty()) {
+      int totalWeight = 0;
+      for (var weight : exam.getSectionWeights()) {
+        if (weight.getPercentageWeight() == null || weight.getPercentageWeight() <= 0) {
+          throw new RuntimeException("Section weight must be positive: " + weight.getSectionId());
+        }
+        totalWeight += weight.getPercentageWeight();
+      }
+      if (totalWeight != 100) {
+        throw new RuntimeException("Section weights must sum to 100, got: " + totalWeight);
+      }
+    }
+
     for (var section : exam.getSections()) {
 
       if (section.getQuestions() == null || section.getQuestions().isEmpty()) {
@@ -177,5 +191,71 @@ public class QuestionLoaderService {
     filteredExam.setSections(filteredSections);
 
     return filteredExam;
+  }
+
+  /**
+   * Randomly selects questions by section with percentage-based weights.
+   * Distributes the total question count across sections based on their weights.
+   *
+   * @param exam the exam with section weights
+   * @param totalCount total number of questions to select (e.g., 50)
+   * @return list of selected question ids distributed by weight
+   */
+  public List<String> selectRandomQuestionIdsByWeight(ExamYaml exam, int totalCount) {
+    
+    if (exam.getSectionWeights() == null || exam.getSectionWeights().isEmpty()) {
+      // Fall back to flat random selection if no weights defined
+      return selectRandomQuestionIds(exam, totalCount);
+    }
+
+    var selectedIds = new ArrayList<String>();
+    var sectionWeightMap = new java.util.HashMap<String, Integer>();
+    
+    // Build map of section weights
+    for (var weight : exam.getSectionWeights()) {
+      sectionWeightMap.put(weight.getSectionId(), weight.getPercentageWeight());
+    }
+
+    // Map sections by id for quick lookup
+    var sectionMap = exam.getSections().stream()
+      .collect(java.util.stream.Collectors.toMap(SectionYaml::getId, s -> s));
+
+    // Distribute questions across sections based on weights
+    for (var weight : exam.getSectionWeights()) {
+      String sectionId = weight.getSectionId();
+      int percentageWeight = weight.getPercentageWeight();
+      
+      // Calculate questions needed for this section
+      int questionsForSection = Math.round(totalCount * percentageWeight / 100f);
+      
+      // Get all question ids from this section
+      var section = sectionMap.get(sectionId);
+      if (section == null) {
+        throw new RuntimeException("Section not found: " + sectionId);
+      }
+
+      var sectionQuestionIds = section.getQuestions().stream()
+        .map(QuestionYaml::getId)
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+
+      if (questionsForSection > sectionQuestionIds.size()) {
+        throw new RuntimeException(
+          "Section " + sectionId + " has only " + sectionQuestionIds.size() + 
+          " questions but weight requires " + questionsForSection
+        );
+      }
+
+      // Fisher-Yates shuffle and select
+      for (int i = sectionQuestionIds.size() - 1; i > 0; i--) {
+        int j = ThreadLocalRandom.current().nextInt(i + 1);
+        String tmp = sectionQuestionIds.get(i);
+        sectionQuestionIds.set(i, sectionQuestionIds.get(j));
+        sectionQuestionIds.set(j, tmp);
+      }
+
+      selectedIds.addAll(sectionQuestionIds.subList(0, questionsForSection));
+    }
+
+    return selectedIds;
   }
 }
