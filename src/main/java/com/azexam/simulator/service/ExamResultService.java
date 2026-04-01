@@ -31,7 +31,6 @@ public class ExamResultService {
   
   private final ExamSessionService sessionService;
   private final ExamResultRepository resultRepository;
-  private final QuestionLoaderService questionLoader;
   private final ExamAnswerRepository answerRepository;
   private final ExamSectionResultRepository examSectionResultRepository;
   private final ScoringEngine scoringEngine;
@@ -39,14 +38,12 @@ public class ExamResultService {
   public ExamResultService(
     ExamSessionService sessionService,
     ExamResultRepository resultRepository,
-    QuestionLoaderService questionLoader,
     ExamAnswerRepository answerRepository,
     ExamSectionResultRepository examSectionResultRepository,
     ScoringEngine scoringEngine
   ) {
     this.sessionService = sessionService;
     this.resultRepository = resultRepository;
-    this.questionLoader = questionLoader;
     this.answerRepository = answerRepository;
     this.examSectionResultRepository = examSectionResultRepository;
     this.scoringEngine = scoringEngine;
@@ -85,7 +82,7 @@ public class ExamResultService {
       throw new BadRequestException("Exam time expired");
     }
     
-    var exam = questionLoader.loadExam(session.getExamCode());
+    var exam = sessionService.loadExamForSession(session);
 
     var answers = answerRepository.findBySessionId(sessionId);
     
@@ -193,7 +190,7 @@ public class ExamResultService {
     
     var session = sessionService.getSession(sessionId);
 
-    var exam = questionLoader.loadExam(session.getExamCode());
+    var exam = sessionService.loadExamForSession(session);
 
     var answers = answerRepository.findBySessionId(sessionId);
 

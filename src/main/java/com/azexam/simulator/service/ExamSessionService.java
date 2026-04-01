@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.azexam.simulator.model.ExamSession;
 import com.azexam.simulator.model.User;
+import com.azexam.simulator.model.yaml.ExamYaml;
 import com.azexam.simulator.repository.ExamSessionRepository;
 import com.azexam.simulator.repository.UserRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Manages creation and lifecycle updates of exam sessions.
@@ -20,30 +23,48 @@ public class ExamSessionService {
   private final ExamSessionRepository sessionRepository;
   private final UserRepository userRepository;
   private final QuestionLoaderService questionLoader;
+  private final UserService userService;
+  private final ObjectMapper objectMapper;
   
   public ExamSessionService(
     ExamSessionRepository sessionRepository,
     UserRepository userRepository,
-    QuestionLoaderService questionLoader
+    QuestionLoaderService questionLoader,
+    UserService userService,
+    ObjectMapper objectMapper
   ) {
     this.sessionRepository = sessionRepository;
     this.userRepository = userRepository;
     this.questionLoader = questionLoader;
+    this.userService = userService;
+    this.objectMapper = objectMapper;
   }
 
   /**
    * Creates a new in-progress exam session for a user.
    *
    * @param examCode exam identifier
-   * @param userId user id
+   * @param userId external user id string
    * @return persisted exam session
    */
-  public ExamSession createSession(String examCode, UUID userId) {
+  public ExamSession createSession(String examCode, String userId) {
+
+    UUID internalUserId = userService.toInternalUserId(userId);
     
-    User user = userRepository.findById(userId)
+    User user = userRepository.findById(internalUserId)
       .orElseThrow(() -> new RuntimeException("User not found"));
     
     var exam = questionLoader.loadExam(examCode);
+    int poolSize = questionLoader.getTotalQuestionCount(exam);
+    int randomQuestionCount = exam.getRandomQuestionCount();
+
+    if (poolSize < randomQuestionCount) {
+      throw new RuntimeException(
+        "Question bank must contain at least " + randomQuestionCount + " questions"
+      );
+    }
+
+    var selectedQuestionIds = questionLoader.selectRandomQuestionIds(exam, randomQuestionCount);
     
     ExamSession session = new ExamSession();
     session.setId(UUID.randomUUID());
@@ -54,6 +75,7 @@ public class ExamSessionService {
 
     // Set the duration for the exam session
     session.setDurationMinutes(exam.getDurationMinutes());
+    session.setSelectedQuestionIds(toJson(selectedQuestionIds));
 
     return sessionRepository.save(session);
   }
@@ -88,5 +110,39 @@ public class ExamSessionService {
     session.setStatus("SUBMITTED");
     session.setEndTime(Instant.now());
     sessionRepository.save(session);
+  }
+
+  /**
+   * Loads and applies the session's frozen question subset.
+   */
+  public ExamYaml loadExamForSession(ExamSession session) {
+    var exam = questionLoader.loadExam(session.getExamCode());
+    var selectedIds = parseSelectedQuestionIds(session.getSelectedQuestionIds());
+
+    if (selectedIds.isEmpty()) {
+      return exam;
+    }
+
+    return questionLoader.filterExamByQuestionIds(exam, selectedIds);
+  }
+
+  private String toJson(List<String> selectedQuestionIds) {
+    try {
+      return objectMapper.writeValueAsString(selectedQuestionIds);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to serialize selected questions", e);
+    }
+  }
+
+  private List<String> parseSelectedQuestionIds(String selectedQuestionIdsJson) {
+    if (selectedQuestionIdsJson == null || selectedQuestionIdsJson.isBlank()) {
+      return List.of();
+    }
+
+    try {
+      return objectMapper.readValue(selectedQuestionIdsJson, new TypeReference<List<String>>() {});
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to parse selected question ids", e);
+    }
   }
 }

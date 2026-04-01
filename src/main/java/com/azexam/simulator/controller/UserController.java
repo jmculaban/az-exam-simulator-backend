@@ -5,13 +5,20 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.azexam.simulator.dto.EnsureUserRequest;
+import com.azexam.simulator.dto.UserResponse;
 import com.azexam.simulator.service.ExamQueryService;
+import com.azexam.simulator.service.UserService;
+
+import jakarta.validation.Valid;
 
 /**
  * REST endpoints related to user-level exam querying.
@@ -23,9 +30,21 @@ public class UserController {
   private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
   private final ExamQueryService examQueryService;
+  private final UserService userService;
 
-  public UserController(ExamQueryService examQueryService) {
+  public UserController(ExamQueryService examQueryService, UserService userService) {
     this.examQueryService = examQueryService;
+    this.userService = userService;
+  }
+
+  /**
+   * Ensures a user exists (idempotent). Creates a new user if missing.
+   */
+  @PostMapping
+  public ResponseEntity<UserResponse> ensureUser(@Valid @RequestBody EnsureUserRequest request) {
+    log.info("Ensuring user exists: userId={}", request.getId());
+    var user = userService.ensureUser(request.getId(), request.getEmail());
+    return ResponseEntity.ok(new UserResponse(user.getId(), user.getEmail()));
   }
 
   /**

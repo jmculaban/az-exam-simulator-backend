@@ -41,7 +41,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ExamQueryService {
   
   private final ExamSessionService examSessionService;
-  private final QuestionLoaderService questionLoaderService;
   private final ExamAnswerRepository examAnswerRepository;
   private final ExamSessionRepository examSessionRepository;
   private final ExamQuestionStateRepository examQuestionStateRepository;
@@ -51,7 +50,6 @@ public class ExamQueryService {
 
   public ExamQueryService(
       ExamSessionService examSessionService,
-      QuestionLoaderService questionLoaderService,
       ExamAnswerRepository examAnswerRepository,
       ExamSessionRepository examSessionRepository,
       ExamQuestionStateRepository examQuestionStateRepository,
@@ -59,7 +57,6 @@ public class ExamQueryService {
       ObjectMapper objectMapper,
       ScoringEngine scoringEngine) {
     this.examSessionService = examSessionService;
-    this.questionLoaderService = questionLoaderService;
     this.examAnswerRepository = examAnswerRepository;
     this.examSessionRepository = examSessionRepository;
     this.examQuestionStateRepository = examQuestionStateRepository;
@@ -80,7 +77,7 @@ public class ExamQueryService {
     var session = examSessionService.getSession(sessionId);
 
     // 2. Load exam questions
-    var exam = questionLoaderService.loadExam(session.getExamCode());
+    var exam = examSessionService.loadExamForSession(session);
     var states = examQuestionStateRepository.findBySessionId(sessionId);
 
     // 3. Load existing answers for the session from DB
@@ -152,7 +149,7 @@ public class ExamQueryService {
     var session = examSessionService.getSession(sessionId);
 
     // 2. Load exam questions
-    var exam = questionLoaderService.loadExam(session.getExamCode());
+    var exam = examSessionService.loadExamForSession(session);
     int total = exam.getSections().stream()
       .mapToInt(s -> s.getQuestions().size())
       .sum();
@@ -228,7 +225,7 @@ public class ExamQueryService {
 
   public SectionReviewResponse getSectionReview(UUID sessionId) {
     var session = examSessionService.getSession(sessionId);
-    var exam = questionLoaderService.loadExam(session.getExamCode());
+    var exam = examSessionService.loadExamForSession(session);
     var states = examQuestionStateRepository.findBySessionId(sessionId);
     var answers = examAnswerRepository.findBySessionId(sessionId);
 
@@ -284,7 +281,7 @@ public class ExamQueryService {
       .orElseThrow(() -> new RuntimeException("Exam result not found"));
     
     // 3. Load exam
-    var exam = questionLoaderService.loadExam(session.getExamCode());
+    var exam = examSessionService.loadExamForSession(session);
 
     // 4. Load answers
     var answers = examAnswerRepository.findBySessionId(sessionId);

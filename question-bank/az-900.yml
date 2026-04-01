@@ -1,6 +1,7 @@
-examCode: AZ-900
+﻿examCode: AZ-900
 description: Microsoft Azure Fundamentals
 durationMinutes: 60
+randomQuestionCount: 50
 
 sections:
   - id: s1
@@ -9,51 +10,865 @@ sections:
 
       - id: q1
         type: SINGLE_CHOICE
-        text: What is Azure?
+        text: Which Azure service best matches this scenario? (Question 1)
         options:
-          - A cloud platform
-          - A database
-          - A programming language
-        correctAnswer: A cloud platform
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
 
       - id: q2
         type: MULTIPLE_CHOICE
-        text: Which are Azure services?
+        text: Select two core benefits of cloud computing. (Question 2)
         options:
-          - Virtual Machines
-          - Azure SQL
-          - GitHub
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
         correctAnswers:
-          - Virtual Machines
-          - Azure SQL
+          - Elastic scaling
+          - Consumption-based pricing
 
       - id: q3
         type: ORDERING
-        text: Order the deployment steps
+        text: Order the standard release flow from development to production. (Question 3)
         options:
+          - Plan
           - Build
           - Test
           - Deploy
         correctOrder:
+          - Plan
           - Build
           - Test
           - Deploy
 
       - id: q4
         type: MATCHING
-        text: Match service to category
+        text: Match each Azure service to its category. (Question 4)
         options:
           - compute
           - storage
           - database
           - networking
         optionMap:
-          vm: Virtual Machine
-          blob: Blob Storage
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
           sql: Azure SQL Database
-          vnet: Virtual Network
+          vnet: Azure Virtual Network
         correctMap:
           vm: compute
           blob: storage
           sql: database
           vnet: networking
+
+      - id: q5
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 5)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q6
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 6)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q7
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 7)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q8
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 8)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q9
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 9)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q10
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 10)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q11
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 11)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q12
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 12)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q13
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 13)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q14
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 14)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q15
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 15)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q16
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 16)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q17
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 17)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q18
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 18)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q19
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 19)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q20
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 20)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q21
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 21)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q22
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 22)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q23
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 23)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q24
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 24)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q25
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 25)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q26
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 26)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q27
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 27)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q28
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 28)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q29
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 29)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q30
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 30)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q31
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 31)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q32
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 32)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q33
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 33)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q34
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 34)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q35
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 35)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q36
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 36)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q37
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 37)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q38
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 38)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q39
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 39)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q40
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 40)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q41
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 41)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q42
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 42)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q43
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 43)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q44
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 44)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q45
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 45)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q46
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 46)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q47
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 47)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q48
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 48)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q49
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 49)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q50
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 50)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q51
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 51)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q52
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 52)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q53
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 53)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q54
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 54)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q55
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 55)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q56
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 56)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q57
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 57)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q58
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 58)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q59
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 59)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q60
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 60)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+
+      - id: q61
+        type: SINGLE_CHOICE
+        text: Which Azure service best matches this scenario? (Question 61)
+        options:
+          - Azure Blob Storage
+          - Azure Virtual Network
+          - Azure Policy
+        correctAnswer: Azure Blob Storage
+
+      - id: q62
+        type: MULTIPLE_CHOICE
+        text: Select two core benefits of cloud computing. (Question 62)
+        options:
+          - Elastic scaling
+          - High capital expenditure
+          - Consumption-based pricing
+          - Fixed hardware lifecycle
+        correctAnswers:
+          - Elastic scaling
+          - Consumption-based pricing
+
+      - id: q63
+        type: ORDERING
+        text: Order the standard release flow from development to production. (Question 63)
+        options:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Plan
+          - Build
+          - Test
+          - Deploy
+
+      - id: q64
+        type: MATCHING
+        text: Match each Azure service to its category. (Question 64)
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Azure Virtual Machines
+          blob: Azure Blob Storage
+          sql: Azure SQL Database
+          vnet: Azure Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
+

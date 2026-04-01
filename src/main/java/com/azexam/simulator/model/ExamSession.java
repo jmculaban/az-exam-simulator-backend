@@ -3,6 +3,7 @@ package com.azexam.simulator.model;
 import java.time.Instant;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -23,6 +24,9 @@ public class ExamSession {
   private String examCode;
   private String status;
   private Integer durationMinutes;
+
+  @Column(name = "selected_question_ids", columnDefinition = "jsonb")
+  private String selectedQuestionIds;
 
   private Instant startTime;
   private Instant endTime;
