@@ -15,11 +15,14 @@ import com.azexam.simulator.dto.ExamProgressResponse;
 import com.azexam.simulator.dto.ExamTimerResponse;
 import com.azexam.simulator.dto.NavigationDto;
 import com.azexam.simulator.dto.QuestionResponse;
+import com.azexam.simulator.dto.QuestionReviewItemDto;
 import com.azexam.simulator.dto.ResumeExamResponse;
 import com.azexam.simulator.dto.ReviewExamResponse;
 import com.azexam.simulator.dto.ReviewQuestionDto;
 import com.azexam.simulator.dto.ReviewSectionDto;
 import com.azexam.simulator.dto.SectionResponseDto;
+import com.azexam.simulator.dto.SectionReviewItemDto;
+import com.azexam.simulator.dto.SectionReviewResponse;
 import com.azexam.simulator.dto.UserExamHistoryResponse;
 import com.azexam.simulator.model.ExamQuestionState;
 import com.azexam.simulator.model.ExamSession;
@@ -130,6 +133,7 @@ public class ExamQueryService {
       sessionId,
       session.getStatus(),
       session.getExamCode(),
+      exam.getDescription(),
       buildTimer(session),
       sections,
       buildNavigation(sections)
@@ -219,6 +223,50 @@ public class ExamQueryService {
       passed,
       examCode,
       pageable
+    );
+  }
+
+  public SectionReviewResponse getSectionReview(UUID sessionId) {
+    var session = examSessionService.getSession(sessionId);
+    var exam = questionLoaderService.loadExam(session.getExamCode());
+    var states = examQuestionStateRepository.findBySessionId(sessionId);
+    var answers = examAnswerRepository.findBySessionId(sessionId);
+
+    var answeredIds = answers.stream()
+      .map(a -> a.getQuestionId())
+      .collect(Collectors.toSet());
+
+    Map<String, ExamQuestionState> stateMap = states.stream()
+      .collect(Collectors.toMap(
+        s -> s.getQuestionId(),
+        s -> s,
+        (existing, duplicate) -> existing
+      ));
+
+    var sections = exam.getSections().stream().map(section -> {
+      var questions = section.getQuestions().stream().map(q -> {
+        var state = stateMap.get(q.getId());
+        return new QuestionReviewItemDto(
+          q.getId(),
+          q.getText(),
+          answeredIds.contains(q.getId()),
+          state != null && Boolean.TRUE.equals(state.isFlagged())
+        );
+      }).toList();
+      return new SectionReviewItemDto(section.getId(), section.getTitle(), questions);
+    }).toList();
+
+    int total = sections.stream().mapToInt(s -> s.getQuestions().size()).sum();
+    int answered = (int) sections.stream().flatMap(s -> s.getQuestions().stream()).filter(QuestionReviewItemDto::isAnswered).count();
+    int flagged = (int) sections.stream().flatMap(s -> s.getQuestions().stream()).filter(QuestionReviewItemDto::isFlagged).count();
+
+    return new SectionReviewResponse(
+      sessionId,
+      session.getExamCode(),
+      exam.getDescription(),
+      buildTimer(session),
+      new NavigationDto(total, answered, flagged, 0),
+      sections
     );
   }
 

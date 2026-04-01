@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExamYaml {
   private String examCode;
+  private String description;
   private Integer durationMinutes;
   private List<SectionYaml> sections;
 }

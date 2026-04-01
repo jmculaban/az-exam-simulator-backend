@@ -176,4 +176,10 @@ public class ExamController {
       examQueryService.getReview(sessionId)
     );
   }
+
+  @GetMapping("/{sessionId}/section-review")
+  public ResponseEntity<?> getSectionReview(@PathVariable UUID sessionId) {
+    log.info("Section review: sessionId={}", sessionId);
+    return ResponseEntity.ok(examQueryService.getSectionReview(sessionId));
+  }
 }

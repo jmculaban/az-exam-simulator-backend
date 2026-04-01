@@ -1,0 +1,59 @@
+examCode: AZ-900-TEST
+description: Microsoft Azure Fundamentals
+durationMinutes: 2
+
+sections:
+  - id: s1
+    title: Describe Cloud Concepts
+    questions:
+
+      - id: q1
+        type: SINGLE_CHOICE
+        text: What is Azure?
+        options:
+          - A cloud platform
+          - A database
+          - A programming language
+        correctAnswer: A cloud platform
+
+      - id: q2
+        type: MULTIPLE_CHOICE
+        text: Which are Azure services?
+        options:
+          - Virtual Machines
+          - Azure SQL
+          - GitHub
+        correctAnswers:
+          - Virtual Machines
+          - Azure SQL
+
+      - id: q3
+        type: ORDERING
+        text: Order the deployment steps
+        options:
+          - Build
+          - Test
+          - Deploy
+        correctOrder:
+          - Build
+          - Test
+          - Deploy
+
+      - id: q4
+        type: MATCHING
+        text: Match service to category
+        options:
+          - compute
+          - storage
+          - database
+          - networking
+        optionMap:
+          vm: Virtual Machine
+          blob: Blob Storage
+          sql: Azure SQL Database
+          vnet: Virtual Network
+        correctMap:
+          vm: compute
+          blob: storage
+          sql: database
+          vnet: networking
